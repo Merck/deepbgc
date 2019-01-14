@@ -1,0 +1,213 @@
+import shutil
+import subprocess
+import os
+import numpy as np
+import pandas as pd
+import tempfile
+
+MAX_EVALUE = 0.01
+
+class SequenceToPfamCSVConverter:
+    def __init__(self, db_path):
+        self.db_path = db_path
+
+    def convert(self, input_path, output_path):
+
+        format = guess_format(input_path)
+
+        if not format:
+            raise NotImplementedError("Filetype not recognized: {}".format(input_path))
+        elif format == 'csv':
+            # Input is already a CSV file.
+            return False
+
+        if not self.db_path:
+            raise AttributeError('Pfam DB path not specified.')
+
+        from Bio import SeqIO
+        with tempfile.TemporaryDirectory() as tempdir:
+            sequences = SeqIO.parse(input_path, format)
+            if not sequences:
+                raise AttributeError("No sequences in {} file: {}".format(format, input_path))
+
+            with open(output_path, 'w') as outfile:
+                for i, sequence in enumerate(sequences):
+                    print("="*80)
+                    print('Processing sequence: {}'.format(sequence.id))
+                    print("="*80)
+                    print()
+
+                    #from Bio.Alphabet import NucleotideAlphabet
+                    #if not isinstance(sequence.seq.alphabet, NucleotideAlphabet):
+                    #    raise AttributeError("Unsupported alphabet: {}".format(sequence.seq.alphabet))
+
+                    nucl_path = os.path.join(tempdir, 'nucl.fa')
+                    SeqIO.write(sequence, nucl_path, 'fasta')
+
+                    protein_path = os.path.join(tempdir, 'proteins.fa')
+                    save_protein_sequence(nucl_path, protein_path)
+
+                    domtbl_path = os.path.join(tempdir, 'pfam.tbl')
+                    detect_pfam_domains(protein_path, self.db_path, domtbl_path)
+
+                    gene_locations = get_prodigal_gene_locations(protein_path)
+
+                    domains = domtbl_to_df(domtbl_path, gene_locations=gene_locations)
+                    domains.insert(0, 'sequence_id', sequence.id)
+                    domains.to_csv(outfile, index=False, header=(i == 0))
+        return True
+
+def guess_format(file_path):
+    _, ext = os.path.splitext(file_path)
+    if ext in ['.fa', '.fasta']:
+        return 'fasta'
+    elif ext in ['.gbk', '.gb', '.genbank']:
+        return 'genbank'
+    elif ext in ['.csv']:
+        return 'csv'
+    return None
+
+def get_prodigal_gene_locations(protein_path):
+    from Bio import SeqIO
+    proteins = SeqIO.parse(protein_path, 'fasta')
+    locations = []
+    for protein in proteins:
+        splits = protein.description.split('#')
+        try:
+            locations.append({
+                'protein_id': protein.id,
+                'start': int(splits[1]),
+                'end': int(splits[2]),
+                'strand': int(splits[3])
+            })
+        except Exception as e:
+            raise AttributeError('Invalid Prodigal gene description: "{}"'.format(protein.description), e)
+    return pd.DataFrame(locations).set_index('protein_id')
+
+
+def save_protein_sequence(input_path, protein_path):
+    if not shutil.which('prodigal'):
+        raise Exception("Prodigal needs to be installed and available on PATH in order to detect genes.")
+
+    print('Detecting genes using Prodigal...')
+
+    FNULL = open(os.devnull, 'w')
+    subprocess.call(['prodigal', '-i', input_path, '-a', protein_path], stdout=FNULL, stderr=FNULL)
+
+    if not os.path.exists(protein_path):
+        # TODO improve message
+        raise Exception("Unexpected error detecting genes using Prodigal")
+
+
+def detect_pfam_domains(protein_path, db_path, domtbl_path):
+    if not shutil.which('hmmscan') or not shutil.which('hmmpress'):
+        raise Exception(
+            "HMMscan and HMMpress needs to be installed and available on PATH in order to detect pfam domains.")
+
+    pressed_db_path = db_path + '.h3m'
+    if not os.path.exists(pressed_db_path):
+        print('Pressing pfam DB...')
+        subprocess.call(['hmmpress', db_path])
+
+        if not os.path.exists(pressed_db_path):
+            # TODO improve message
+            raise Exception("Unexpected error running HMMpress on Pfam DB")
+
+    print('Detecting pfam domains using HMMscan, this might take a while...')
+    FNULL = open(os.devnull, 'w')
+    subprocess.call(['hmmscan', '--domtblout', domtbl_path, db_path, protein_path], stdout=FNULL)
+
+    if not os.path.exists(domtbl_path):
+        # TODO improve message
+        raise Exception("Unexpected error detecting protein domains using HMMscan")
+
+
+SUPPORTED_FORMATS = [
+    'proteins2fasta'
+]
+
+
+def domtbl_to_df(domtbl_path, format=None, gene_locations=None):
+    """
+    Pfam hmmscan tabular format into internal Domain DataFrame format, one protein domain per line
+    :param domtbl_path: Path to HMMscan tabular format result file
+    :param format: Format of the protein fasta file that was passed into HMMscan (supported: proteins2fasta or None).
+    If it was generated by proteins2fasta, we can extract other values from the sequence ID.
+    :param gene_locations: DataFrame of (start, end, strand) indexed by protein ID
+    :return: Domain DataFrame, one protein domain per line
+    """
+    from Bio import SearchIO
+    # Read domain matches in all proteins
+    queries = SearchIO.parse(domtbl_path, 'hmmscan3-domtab')
+
+    # Extract all matched domain hits
+    domains = []
+    for query in queries:
+        query_domains = []
+        for hit in query.hits:
+            best_index = np.argmin([hsp.evalue for hsp in hit.hsps])
+            best_hsp = hit.hsps[best_index]
+            pfam_id = hit.accession.split('.')[0]
+            evalue = float(best_hsp.evalue)
+            if evalue > MAX_EVALUE:
+                continue
+            query_domains.append({
+                'pfam_id': pfam_id,
+                'query_id': query.id,
+                'domain_start': int(best_hsp.query_start),
+                'domain_end': int(best_hsp.query_end)
+            })
+        domains += sorted(query_domains, key=lambda x: x['domain_start'])
+
+    domains = pd.DataFrame(domains)
+
+    num_domains = len(domains)
+    print('Detected {} Pfam domain hits'.format(num_domains))
+
+    fields = ['pfam_id', 'domain_start', 'domain_end']
+
+    # Use sequence id generated by proteins2fasta.py to get our gene info directly.
+    if format == 'proteins2fasta':
+        domains['sequence_id'] = domains['query_id'].apply(lambda s: s.split('|')[0])
+        domains['locus_tag'] = domains['query_id'].apply(lambda s: s.split('|')[1])
+        domains['protein_id'] = domains['query_id'].apply(lambda s: s.split('|')[2])
+        domains['gene_start'] = domains['query_id'].apply(lambda s: normalize_gene_coord(s.split('|')[3].split('-')[0]))
+        domains['gene_end'] = domains['query_id'].apply(lambda s: normalize_gene_coord(s.split('|')[3].split('-')[1]))
+        domains['gene_strand'] = domains['query_id'].apply(lambda s: s.split('|')[4])
+        fields = ['contig_id', 'locus_tag', 'protein_id', 'gene_start', 'gene_end', 'gene_strand', 'pfam_id',
+                  'domain_start', 'domain_end']
+    elif format is None:
+        missing_ids = set(domains['query_id']).difference(gene_locations.index.values)
+        if len(missing_ids):
+            raise AttributeError("There are {} protein IDs missing: {}".format(len(missing_ids), list(missing_ids)[:10]))
+        locations = gene_locations.loc[domains['query_id']]
+        domains['protein_id'] = locations.index.values
+        domains['gene_start'] = locations['start'].values
+        domains['gene_end'] = locations['end'].values
+        domains['gene_strand'] = locations['strand'].values
+
+        fields = ['protein_id', 'gene_start', 'gene_end', 'gene_strand'] + fields
+
+    else:
+        raise AttributeError(
+            'Format {} not supported, use one of {} or define the protein file.'.format(format, SUPPORTED_FORMATS))
+    domains = domains[fields]
+
+    return domains
+
+
+def normalize_gene_coord(gene_coord):
+    """
+    Normalize imprecise gene coordinates, will pfam <0 into 0 and >1234 into 1234.
+    :param gene_coord: Gene coordinate as int or str
+    :return: normalized numeric gene coordinate
+    """
+    if isinstance(gene_coord, int):
+        return gene_coord
+    if isinstance(gene_coord, str):
+        # TODO: Can we turn <0 into 0 and >1234 into 1234?
+        if gene_coord.startswith('<') or gene_coord.startswith('>'):
+            gene_coord = gene_coord[1:]
+        if gene_coord.isnumeric():
+            return int(gene_coord)
+    raise AttributeError('Invalid gene coord {} ({})'.format(gene_coord, type(gene_coord)))

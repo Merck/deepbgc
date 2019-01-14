@@ -1,0 +1,27 @@
+--------------------------------------------------
+Third party dependencies listed by License type
+[Format: name (Python module) - URL]
+--------------------------------------------------
+
+Biopython License Agreement
+* Biopython (biopython) - https://github.com/biopython/biopython/blob/d5718bb7e3ee505b859b39c03f8ffad8a9a0be2f/LICENSE.rst
+
+OSI Approved (new BSD)
+* scikit-learn (scikit-learn) - https://github.com/scikit-learn/scikit-learn/blob/2e85c8608c93ad0e3290414c4e5e650b87d44b27/COPYING
+* hmmlearn (hmmlearn) - https://github.com/hmmlearn/hmmlearn/blob/1f60373d28c427a2a05c9ea26231c717772066dc/LICENSE.txt
+
+BSD 3-Clause License
+* Pandas (pandas) - https://github.com/pandas-dev/pandas/blob/5aba6659e422e985683cfb46c07c3364a02b6e5b/AUTHORS.md
+* HMMER - https://github.com/EddyRivasLab/hmmer/blob/3e38d667761e0a98a263079cb4a90e49d4b720d5/LICENSE
+
+MIT License (MIT)
+* Keras (keras) - https://github.com/keras-team/keras/blob/dc698c5486117780b643eda0a2f60a8753625b8a/LICENSE
+
+Apache Software License (Apache 2.0)
+* TensorFlow (tensorflow) - https://github.com/tensorflow/tensorflow/blob/6b6d843ccab78f9f91c3b98a43ca09ffecad4747/LICENSE
+
+Python Software Foundation License (BSD)
+* Matplotlib (matplotlib) - https://matplotlib.org/users/license.html
+
+GNU General Public License v3.0
+* Prodigal - https://github.com/hyattpd/Prodigal/blob/b1321f0899c4d7a835583feb344e2c9a5bd908d1/LICENSE
