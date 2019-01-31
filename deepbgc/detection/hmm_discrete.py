@@ -114,8 +114,8 @@ class DiscreteHMM(HMM):
             weighted_counts = [self._get_pfam_counts(X, y) * weight for i, (X, y, weight) in zipped]
             all_counts = pd.concat(weighted_counts).reset_index().groupby('pfam_id').sum().sort_index()
         else:
-            X: pd.DataFrame = pd.concat(X_list)
-            y: pd.DataFrame = pd.concat(y_list)
+            X = pd.concat(X_list)  # type: pd.DataFrames
+            y = pd.concat(y_list)  # type: pd.DataFrames
             all_counts = self._get_pfam_counts(X, y).sort_index()
 
         if verbose:

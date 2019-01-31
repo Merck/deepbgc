@@ -27,7 +27,7 @@ class DeepBGCDetector:
             score[SCORE_COLUMN] = self.model.predict(sample)
             scores.append(score)
 
-        merged: pd.DataFrame = pd.concat(scores)
+        merged = pd.concat(scores)  # type: pd.DataFrame
         return merged
 
     def detect(self, domains, score_threshold=0.5):

@@ -16,7 +16,7 @@ class KerasRNN(BaseEstimator, ClassifierMixin):
                  activation='sigmoid', return_sequences=True):
         from keras.models import Sequential
         if trained_model is not None:
-            self.model: Sequential = trained_model
+            self.model = trained_model  # type: Sequential
             # Set the attributes from the model object to be able to clone and cross-validate a loaded model
             self.batch_size = trained_model.layers[0].batch_input_shape[0]
             self.hidden_size = trained_model.layers[0].layer.units
@@ -25,7 +25,7 @@ class KerasRNN(BaseEstimator, ClassifierMixin):
             self.activation = trained_model.layers[-1].layer.activation
             self.return_sequences = trained_model.layers[0].layer.return_sequences
         else:
-            self.model: Sequential = None
+            self.model = None  # type: Sequential
             self.batch_size = batch_size
             self.hidden_size = hidden_size
             self.loss = loss
@@ -291,7 +291,7 @@ class KerasRNN(BaseEstimator, ClassifierMixin):
         if architecture is None:
             self.model = None
         else:
-            self.model: Sequential = model_from_json(architecture)
+            self.model = model_from_json(architecture)  # type: Sequential
             self.model.set_weights(weights)
 
 def rotate(l, n):
