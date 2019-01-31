@@ -1,5 +1,5 @@
+import os
 from setuptools import setup, find_packages
-from deepbgc import VERSION
 
 install_requires = [
     'argparse',
@@ -12,9 +12,17 @@ install_requires = [
     'matplotlib'
 ]
 
+def get_version():
+    for line in open(os.path.join('deepbgc', '__init__.py'), 'r'):
+        if line.startswith('VERSION'):
+            break
+
+    _, _, version_str = line.strip().split()
+    return version_str[1:-1]
+
 setup(
     name='deepbgc',
-    version=VERSION,
+    version=get_version(),
     description='DeepBGC - Biosynthetic Gene Cluster detection and classification',
     long_description=open('README.md', 'r').read(),
     author='David Příhoda, Geoffrey Hannigan',
