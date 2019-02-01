@@ -41,3 +41,7 @@ deepbgc classify --help
 deepbgc classify --model RandomForestMIBiGClasses_v0.0.1.pkl --output myCandidates/myCandidates.classes.csv myCandidates/myCandidates.candidates.csv
 
 ```
+
+### Trained Models
+
+The trained model files can be found in the GitHub code release [here](https://github.com/Merck/deepbgc/releases).
