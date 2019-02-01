@@ -3,6 +3,7 @@
 ## Install DeepBGC
 
 - Run `pip install deepbgc` to install the `deepbgc` python module.
+- **Note**: Tensorflow is not available for Python 3.7 ([link](https://github.com/tensorflow/tensorflow/issues/17022)) so please use Python 3.6 if you experience this issue.
 
 ## Prerequisities
 
