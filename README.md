@@ -1,48 +1,61 @@
-# DeepBGC: Biosynthetic Gene Cluster detection and classification.
+# DeepBGC: Biosynthetic Gene Cluster detection and classification
 
-## Install DeepBGC
+DeepBGC detects BGCs in bacterial and fungal genomes using deep learning. 
+DeepBGC employs a Bidirectional Long Short-Term Memory Recurrent Neural Network 
+and a word2vec-like vector embedding of Pfam protein domains. 
+Product class and activity of detected BGCs is predicted using a Random Forest classifier.
 
-- Run `pip install deepbgc` to install the `deepbgc` python module.
-- **Note**: Tensorflow is not available for Python 3.7 ([link](https://github.com/tensorflow/tensorflow/issues/17022)) so please use Python 3.6 if you experience this issue.
+[![PyPI license](https://img.shields.io/pypi/l/deepbgc.svg)](https://pypi.python.org/pypi/deepbgc/)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/deepbgc.svg?color=green&label=pypi%20downloads)
+![GitHub Releases](https://img.shields.io/github/downloads/Merck/deepbgc/latest/total.svg?label=GitHub%20downloads)
+[![PyPI version](https://badge.fury.io/py/deepbgc.svg)](https://badge.fury.io/py/deepbgc)
 
-## Prerequisities
+![DeepBGC architecture](images/deepbgc.architecture.png?raw=true "DeepBGC architecture")
 
-- Install Python 3.6 (version 3.7 is not supported by TensorFlow yet)
+## Install using pip
+
+- Install Python version 2.7+ or 3.4+
 - Install Prodigal and put the `prodigal` binary it on your PATH: https://github.com/hyattpd/Prodigal/releases
 - Install HMMER and put the `hmmscan` and `hmmpress` binaries on your PATH: http://hmmer.org/download.html
-- Download and **extract** Pfam database from: ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam31.0/Pfam-A.hmm.gz
+- Run `pip install deepbgc` to install the DeepBGC package      
 
 ## Use DeepBGC
 
-### Detection
+### Download models and Pfam database
 
-Detect BGCs in a genomic sequence.
-
-```bash
-# Show detection help
-deepbgc detect --help
-
-# Detect BGCs in a nucleotide sequence
-deepbgc detect --model DeepBGCDetector_v0.0.1.pkl --pfam Pfam-A.hmm --output myCandidates/ myInputSequence.fa
-
-# Detect BGCs with >0.9 score in existing Pfam CSV sequence
-deepbgc detect --model myModel.pkl --output myStrictCandidates/ -s 0.9 myCandidates/myCandidates.pfam.csv
-
-```
-
-### Classification
-
-Classify BGCs into one or more classes.
+Before you can use DeepBGC, download trained models and Pfam database:
 
 ```bash
-# Show classification help
-deepbgc classify --help
-
-# Predict biosynthetic class of detected BGCs
-deepbgc classify --model RandomForestMIBiGClasses_v0.0.1.pkl --output myCandidates/myCandidates.classes.csv myCandidates/myCandidates.candidates.csv
-
+deepbgc download
 ```
 
-### Trained Models
+You can display downloaded dependencies and models using:
 
-The trained model files can be found in the GitHub code release [here](https://github.com/Merck/deepbgc/releases).
+```bash
+deepbgc info
+```
+
+### Detection and classification
+
+![DeepBGC pipeline](images/deepbgc.pipeline.png?raw=true "DeepBGC pipeline")
+
+Detect and classify BGCs in a genomic sequence. 
+Proteins and Pfam domains are detected automatically if not already annotated (HMMER and Prodigal needed)
+
+```bash
+# Show command help docs
+deepbgc pipeline --help
+
+# Detect and classify BGCs in mySequence.fa using DeepBGC algorithm and save the output to mySequence directory.
+deepbgc pipeline mySequence.fa
+```
+
+This will produce a directory with multiple files and a README.txt with file descriptions.
+
+![Detected BGC Regions](images/deepbgc.bgc.png?raw=true "Detected BGC regions")
+
+### Model training
+
+You can train your own BGC detection and classification models, see `deepbgc train --help` for documentation and examples.
+
+DeepBGC positives, negatives and other training and validation data can be found on the [releases page](https://github.com/Merck/deepbgc/releases).
