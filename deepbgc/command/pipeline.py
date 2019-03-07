@@ -88,7 +88,7 @@ Examples:
         if not detectors:
             detectors = ['deepbgc']
         if not classifiers:
-            classifiers = ['class', 'activity']
+            classifiers = ['product_class', 'product_activity']
         if not output:
             # if not specified, set output path to name of first input file without extension
             output, _ = os.path.splitext(os.path.basename(os.path.normpath(inputs[0])))
