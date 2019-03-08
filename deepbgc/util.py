@@ -149,8 +149,11 @@ def extract_cluster_record(cluster_feature, record):
     """
 
     cluster_record = cluster_feature.extract(record)
-    # TODO set cluster ID
-    # cluster_record.id = cluster.qualifiers.get('bgc_candidate_id', ['unknown_cluster_id'])[0]
+    cluster_record.id = cluster_feature.qualifiers.get('bgc_candidate_id', ['unknown_cluster_id'])[0]
+    cluster_record.description = ''
+    cluster_record.annotations['source'] = record.annotations.get('source', '')
+    cluster_record.annotations['organism'] = record.annotations.get('organism', '')
+    
     proteins_by_id = get_proteins_by_id(get_protein_features(cluster_record))
     # Remove pfams with protein not fully inside cluster borders (therefore not present in cluster_record)
     cluster_record.features = [f for f in cluster_record.features

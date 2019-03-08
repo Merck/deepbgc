@@ -110,7 +110,7 @@ class DeepBGCDetector(PipelineStep):
         for cluster_proteins in clusters:
             start = cluster_proteins[0].location.start
             end = cluster_proteins[-1].location.end
-            candidate_id = '{}({}-{})'.format(record.id, int(start), int(end))
+            candidate_id = '{}_{}-{}.1'.format(record.id, int(start), int(end))
 
             if self.min_nucl > 1:
                 nucl_length = end - start
