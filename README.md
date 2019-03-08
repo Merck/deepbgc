@@ -52,6 +52,11 @@ deepbgc pipeline mySequence.fa
 
 This will produce a directory with multiple files and a README.txt with file descriptions.
 
+#### Example output
+
+See the [DeepBGC Example Result Notebook](https://nbviewer.jupyter.org/urls/github.com/Merck/deepbgc/releases/download/v0.1.0/DeepBGC_Example_Result.ipynb).
+Data can be downloaded on the [releases page](https://github.com/Merck/deepbgc/releases)
+
 ![Detected BGC Regions](images/deepbgc.bgc.png?raw=true "Detected BGC regions")
 
 ### Model training
