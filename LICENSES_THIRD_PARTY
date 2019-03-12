@@ -16,6 +16,9 @@ BSD 3-Clause License
 
 MIT License (MIT)
 * Keras (keras) - https://github.com/keras-team/keras/blob/dc698c5486117780b643eda0a2f60a8753625b8a/LICENSE
+* appdirs (appdirs) - https://github.com/ActiveState/appdirs/blob/71eca9837f82857fe4f52598901923df05340cb1/LICENSE.txt
+* PyTest (pytest) - https://github.com/pytest-dev/pytest/blob/7f67158/LICENSE
+* PyTest-mock (pytest-mock) - https://github.com/pytest-dev/pytest-mock/blob/ab46694/LICENSE
 
 Apache Software License (Apache 2.0)
 * TensorFlow (tensorflow) - https://github.com/tensorflow/tensorflow/blob/6b6d843ccab78f9f91c3b98a43ca09ffecad4747/LICENSE
