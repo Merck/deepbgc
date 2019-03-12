@@ -48,14 +48,14 @@ DOWNLOADS = [
         'url': 'https://github.com/Merck/deepbgc/releases/download/v{}/product_activity.pkl'.format(DATA_RELEASE_VERSION),
         'target': 'product_activity.pkl',
         'dir': 'classifier',
-        'checksum': 'ca4be7031ae9f70780f17c616a4fa5b5',
+        'checksum': '90f0c010460e9df882cb057664a49f30',
         'versioned': True
     },
     {
         'url': 'https://github.com/Merck/deepbgc/releases/download/v{}/product_class.pkl'.format(DATA_RELEASE_VERSION),
         'target': 'product_class.pkl',
         'dir': 'classifier',
-        'checksum': 'ca4be7031ae9f70780f17c616a4fa5b5',
+        'checksum': 'f78a2eda240403d2f40643d42202f3ac',
         'versioned': True
     },
     {
