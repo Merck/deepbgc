@@ -20,6 +20,7 @@ DOWNLOADS = [
     {
         'url': 'https://github.com/Merck/deepbgc/releases/download/v{}/deepbgc.pkl'.format(DATA_RELEASE_VERSION),
         'target': 'deepbgc.pkl',
+        'dir': 'detector',
         'checksum': '7e9218be79ba45bc9adb23bed3845dc1',
         'versioned': True
     },
