@@ -17,7 +17,7 @@ def test_integration_train_detect_fail_fasta():
     "deepbgc_test.json",
     "clusterfinder_geneborder_test.json",
 ])
-def test_integration_train_detect(model, tmpdir):
+def test_unit_train_detect(model, tmpdir):
     tmpdir = str(tmpdir)
     out_path = os.path.join(tmpdir, 'model.pkl')
     main([
@@ -49,7 +49,7 @@ def test_integration_train_detect(model, tmpdir):
     assert neg_prediction.mean() < 0.5
 
 
-def test_integration_train_classify(tmpdir):
+def test_unit_train_classify(tmpdir):
     tmpdir = str(tmpdir)
     out_path = os.path.join(tmpdir, 'model.pkl')
     main([

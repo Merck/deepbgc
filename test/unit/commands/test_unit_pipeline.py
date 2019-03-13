@@ -1,3 +1,5 @@
+import logging
+
 from deepbgc.main import main
 import os
 from Bio.SeqRecord import SeqRecord
@@ -84,3 +86,8 @@ def test_unit_pipeline_default(tmpdir, mocker):
     for writer in writers:
         assert writer.return_value.write.call_count == 2  # Two records
         writer.return_value.close.assert_called_once_with()
+
+    # Remove logging handlers to avoid affecting other tests
+    logger = logging.getLogger('')
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
