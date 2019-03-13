@@ -1,0 +1,18 @@
+dist: xenial
+language: python
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+# command to install dependencies
+install:
+  - pip install .
+  - pip install deepbgc[hmm]
+  - pip install pytest
+  - pip install pytest-mock
+# command to run tests
+script:
+  - deepbgc --help
+  - deepbgc info
+  - pytest test/unit

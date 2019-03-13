@@ -9,12 +9,12 @@ from io import open
 install_requires = [
     'argparse',
     'biopython>=1.70', # support for structured comments from version 1.70
-    'scikit-learn==0.18.2', # needed for antiSMASH compatibility
+    'scikit-learn>=0.18.2', # needed for antiSMASH compatibility
     'pandas>=0.24.1',
     'numpy>=1.16.1',
     'keras>=2.2.4',
-    'tensorflow==1.12.0',
-    'matplotlib>=2.2.3,<3', # version 3 is not supported in python 2
+    'tensorflow>=1.12.0',
+    'matplotlib>=2.2.3',
     'appdirs>=1.4.3'
 ]
 
@@ -38,7 +38,7 @@ setup(
     packages=find_packages(exclude=('test','test.*')),
     author_email='david.prihoda1@merck.com',
     license='MIT',
-    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+    python_requires=">=2.7, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
     install_requires=install_requires,
     keywords='biosynthetic gene clusters, bgc detection, deep learning, pfam2vec',
     extras_require={
