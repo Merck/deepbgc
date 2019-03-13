@@ -7,8 +7,8 @@ Product class and activity of detected BGCs is predicted using a Random Forest c
 
 [![PyPI license](https://img.shields.io/pypi/l/deepbgc.svg)](https://pypi.python.org/pypi/deepbgc/)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/deepbgc.svg?color=green&label=pypi%20downloads)
-![GitHub Releases](https://img.shields.io/github/downloads/Merck/deepbgc/latest/total.svg?label=GitHub%20downloads)
 [![PyPI version](https://badge.fury.io/py/deepbgc.svg)](https://badge.fury.io/py/deepbgc)
+[![CI](https://api.travis-ci.org/Merck/deepbgc.svg?branch=master)](https://travis-ci.org/Merck/deepbgc)
 
 ![DeepBGC architecture](images/deepbgc.architecture.png?raw=true "DeepBGC architecture")
 
