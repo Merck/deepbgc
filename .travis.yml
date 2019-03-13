@@ -12,4 +12,5 @@ install:
 # command to run tests
 script:
   - deepbgc --help
+  - deepbgc info
   - pytest test/unit
