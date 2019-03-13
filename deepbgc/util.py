@@ -373,6 +373,8 @@ def download_files(downloads):
 
 
 def download_file(url, target_path, checksum, gzipped=False):
+    logging.info('Checking: %s', target_path)
+
     if os.path.exists(target_path) and checksum == file_md5(target_path):
         logging.info('File already downloaded: %s', target_path)
         return False
