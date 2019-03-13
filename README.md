@@ -5,19 +5,27 @@ DeepBGC employs a Bidirectional Long Short-Term Memory Recurrent Neural Network
 and a word2vec-like vector embedding of Pfam protein domains. 
 Product class and activity of detected BGCs is predicted using a Random Forest classifier.
 
+[![BioConda Install](https://img.shields.io/conda/dn/bioconda/deepbgc.svg?style=flag&label=BioConda%20install&color=green)](https://anaconda.org/bioconda/deepbgc) 
+![PyPI - Downloads](https://img.shields.io/pypi/dm/deepbgc.svg?color=green&label=PyPI%20downloads)
 [![PyPI license](https://img.shields.io/pypi/l/deepbgc.svg)](https://pypi.python.org/pypi/deepbgc/)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/deepbgc.svg?color=green&label=pypi%20downloads)
 [![PyPI version](https://badge.fury.io/py/deepbgc.svg)](https://badge.fury.io/py/deepbgc)
 [![CI](https://api.travis-ci.org/Merck/deepbgc.svg?branch=master)](https://travis-ci.org/Merck/deepbgc)
 
 ![DeepBGC architecture](images/deepbgc.architecture.png?raw=true "DeepBGC architecture")
 
+## Install using bioconda (recommended)
+
+- Install Bioconda by following Step 1 and 2 from: https://bioconda.github.io/
+- Run `conda install deepbgc` to install DeepBGC and all of its dependencies    
+
 ## Install using pip
+
+If you don't mind installing the HMMER and Prodigal dependencies manually, you can also install DeepBGC using pip:
 
 - Install Python version 2.7+ or 3.4+
 - Install Prodigal and put the `prodigal` binary it on your PATH: https://github.com/hyattpd/Prodigal/releases
 - Install HMMER and put the `hmmscan` and `hmmpress` binaries on your PATH: http://hmmer.org/download.html
-- Run `pip install deepbgc` to install the DeepBGC package      
+- Run `pip install deepbgc` to install DeepBGC   
 
 ## Use DeepBGC
 
