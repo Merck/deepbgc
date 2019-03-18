@@ -20,7 +20,13 @@ from appdirs import user_data_dir
 try:
     from urllib.request import urlretrieve
 except ImportError:
-    from urllib import urlretrieve
+    from urllib2 import urlopen
+    from shutil import copyfileobj
+    # We cannot use Python 2 urlretrieve since it does not work with SSL behind our custom proxy
+    def urlretrieve(url, path):
+        with open(path, 'wb') as outfile:
+            copyfileobj(urlopen(url), outfile)
+
 import hashlib
 import subprocess
 from distutils.spawn import find_executable
