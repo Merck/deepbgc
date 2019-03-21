@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from deepbgc.main import main
+from deepbgc.main import run
 from deepbgc.models.wrapper import SequenceModelWrapper
 from test.test_util import get_test_file
 import os
@@ -10,7 +10,7 @@ import os
 def test_integration_train_detect_fail_fasta():
     # Should fail due to unprocessed input sequence
     with pytest.raises(NotImplementedError):
-        main(['train', '--model', get_test_file('clusterfinder_geneborder_test.json'), '--output', 'bar.pkl', get_test_file('BGC0000015.fa')])
+        run(['train', '--model', get_test_file('clusterfinder_geneborder_test.json'), '--output', 'bar.pkl', get_test_file('BGC0000015.fa')])
 
 
 @pytest.mark.parametrize("model", [
@@ -20,7 +20,7 @@ def test_integration_train_detect_fail_fasta():
 def test_unit_train_detect(model, tmpdir):
     tmpdir = str(tmpdir)
     out_path = os.path.join(tmpdir, 'model.pkl')
-    main([
+    run([
         'train',
         '--model', get_test_file(model),
         '--config', 'PFAM2VEC', get_test_file('pfam2vec.test.tsv'),
@@ -52,7 +52,7 @@ def test_unit_train_detect(model, tmpdir):
 def test_unit_train_classify(tmpdir):
     tmpdir = str(tmpdir)
     out_path = os.path.join(tmpdir, 'model.pkl')
-    main([
+    run([
         'train',
         '--model', get_test_file('random_forest_test.json'),
         '--classes', get_test_file('BGC0000015.classes.csv'),

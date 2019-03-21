@@ -1,5 +1,5 @@
 from Bio import SeqIO
-from deepbgc.main import main
+from deepbgc.main import run
 from test.test_util import get_test_file, assert_sorted_features
 import os
 from deepbgc import util
@@ -10,7 +10,7 @@ def test_integration_prepare_default(tmpdir):
     tmpdir = str(tmpdir)
     outgbk = os.path.join(tmpdir, 'outfile.gbk')
     outtsv = os.path.join(tmpdir, 'outfile.tsv')
-    main(['prepare', '--output-gbk', outgbk, '--output-tsv', outtsv, get_test_file('BGC0000015.fa')])
+    run(['prepare', '--output-gbk', outgbk, '--output-tsv', outtsv, get_test_file('BGC0000015.fa')])
 
     records = list(SeqIO.parse(outgbk, 'genbank'))
 

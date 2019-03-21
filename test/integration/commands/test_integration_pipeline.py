@@ -1,7 +1,7 @@
 from Bio import SeqIO
 
 from deepbgc import util
-from deepbgc.main import main
+from deepbgc.main import run
 from test.test_util import get_test_file
 import os
 
@@ -9,7 +9,7 @@ import os
 def test_integration_pipeline_default(tmpdir):
     tmpdir = str(tmpdir)
     report_dir = os.path.join(tmpdir, 'report')
-    main(['pipeline', '--output', report_dir, get_test_file('BGC0000015.fa')])
+    run(['pipeline', '--output', report_dir, get_test_file('BGC0000015.fa')])
 
     files = os.listdir(report_dir)
     for file in files:

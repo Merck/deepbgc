@@ -1,6 +1,6 @@
 import logging
 
-from deepbgc.main import main
+from deepbgc.main import run
 import os
 from Bio.SeqRecord import SeqRecord
 
@@ -33,7 +33,7 @@ def test_unit_pipeline_default(tmpdir, mocker):
 
     report_dir = os.path.join(tmpdir, 'report')
     report_tmp_dir = os.path.join(report_dir, 'tmp')
-    main([
+    run([
         'pipeline', 
         '--output', report_dir, 
         '--detector', 'mydetector',
