@@ -56,7 +56,7 @@ class DeepBGCParser(argparse.ArgumentParser):
         self.exit(2, formatted_message)
 
 
-def main(argv=None):
+def run(argv=None):
     import warnings
     warnings.filterwarnings("ignore", message="numpy.dtype size changed")
     warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
@@ -109,9 +109,9 @@ def main(argv=None):
     args.func.run(**args_dict)
 
 
-if __name__ == '__main__':
+def main(argv=None):
     try:
-        main(sys.argv[1:])
+        run(argv)
     except KeyboardInterrupt:
         print(' Interrupted by the user')
         sys.exit(0)
@@ -126,3 +126,7 @@ if __name__ == '__main__':
                 logging.error(arg)
         logging.error('='*80)
         exit(1)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
