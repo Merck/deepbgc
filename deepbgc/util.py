@@ -37,6 +37,7 @@ SCORE_SUFFIX = '_score'
 STRUCTURED_COMMENT_DETECTOR_PREFIX = 'deepbgc_detector_'
 STRUCTURED_COMMENT_CLASSIFIER_PREFIX = 'deepbgc_classifier_'
 DEEPBGC_DOWNLOADS_DIR = 'DEEPBGC_DOWNLOADS_DIR'
+DEEPBGC_DATA_RELEASE_VERSION = 'DEEPBGC_DATA_RELEASE_VERSION'
 PFAM_FEATURE = 'PFAM_domain'
 
 def get_protein_features(record):
@@ -44,7 +45,7 @@ def get_protein_features(record):
 
 
 def get_proteins_by_id(protein_features):
-    return {get_protein_id(feature): feature for feature in protein_features}
+    return {protein_id: feature for feature in protein_features for protein_id in get_protein_ids(feature)}
 
 
 def get_features_of_type(record, feature_type):
@@ -102,21 +103,29 @@ def filter_biosynthetic_pfam_ids(pfam_ids):
 
 def get_cluster_features(record, detector=None):
     features = get_features_of_type(record, 'cluster')
+    features += get_features_of_type(record, 'cand_cluster')
     if detector:
         features = [f for f in features if f.qualifiers.get('detector', [None])[0] == detector]
     return features
 
 
-def get_protein_id(feature):
+def get_protein_ids(feature):
+    ids = []
     if feature.qualifiers.get('unique_protein_id'):
-        return feature.qualifiers['unique_protein_id'][0]
+        ids += feature.qualifiers['unique_protein_id']
     if feature.qualifiers.get('protein_id'):
-        return feature.qualifiers['protein_id'][0]
+        ids += feature.qualifiers['protein_id']
     if feature.qualifiers.get('locus_tag'):
-        return feature.qualifiers['locus_tag'][0]
+        ids += feature.qualifiers['locus_tag']
     if feature.qualifiers.get('gene'):
-        return feature.qualifiers['gene'][0]
-    raise NotImplementedError('No recognized protein ID for feature: {}'.format(feature))
+        ids += feature.qualifiers['gene']
+    if not ids:
+        raise NotImplementedError('No recognized protein ID for feature: {}'.format(feature))
+    return ids
+
+
+def get_protein_id(feature):
+    return get_protein_ids(feature)[0]
 
 
 def format_detector_meta_key(detector_label):
@@ -249,7 +258,8 @@ def create_cluster_dict(cluster, record, add_pfams=True, add_proteins=True, clas
     pfam_ids = get_pfam_feature_ids(cluster_record)
     bio_pfam_ids = filter_biosynthetic_pfam_ids(pfam_ids)
     bgc_candidate_id = cluster.qualifiers.get('bgc_candidate_id', [None])[0]
-    detector_name = cluster.qualifiers.get('detector', ['unspecified'])[0]
+    tool_name = cluster.qualifiers.get('tool', ['unspecified'])[0]
+    detector_name = cluster.qualifiers.get('detector', [tool_name])[0]
 
     cluster_dict = collections.OrderedDict()
     cluster_dict['detector'] = detector_name
@@ -319,9 +329,10 @@ def decode_class_score_string(string):
 def get_downloads_dir(versioned=True):
     from deepbgc.data import DATA_RELEASE_VERSION
     downloads_dir = os.environ.get(DEEPBGC_DOWNLOADS_DIR)
+    data_release_version = os.environ.get(DEEPBGC_DATA_RELEASE_VERSION, DATA_RELEASE_VERSION)
     if not downloads_dir:
         downloads_dir = user_data_dir("deepbgc", version="data")
-    version = DATA_RELEASE_VERSION if versioned else 'common'
+    version = data_release_version if versioned else 'common'
     return os.path.join(downloads_dir, version)
 
 
