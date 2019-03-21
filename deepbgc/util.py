@@ -62,17 +62,18 @@ def sort_record_features(record):
 
 def get_pfam_features(record):
     pfams = get_features_of_type(record, PFAM_FEATURE)
-    from deepbgc.data import PFAM_DB_FILE_NAME
-    filtered_pfams = [pfam for pfam in pfams if pfam.qualifiers.get('database') == [PFAM_DB_FILE_NAME]]
+    from deepbgc.data import PFAM_DB_VERSION
+    filtered_pfams = [pfam for pfam in pfams if pfam.qualifiers.get('database') == [PFAM_DB_VERSION]]
     num_incompatible = len(pfams) - len(filtered_pfams)
     if num_incompatible:
         # TODO: enable users to run model with older incompatible Pfam DB versions?
-        logging.warning('Ignoring {} incompatible Pfam features with database different than "{}"'.format(num_incompatible, PFAM_DB_FILE_NAME))
+        logging.warning('Ignoring {} incompatible Pfam features with database different than "{}"'.format(num_incompatible, PFAM_DB_VERSION))
     return filtered_pfams
+
 
 def get_pfam_feature_ids(record):
     pfam_features = get_pfam_features(record)
-    return [feature.qualifiers['PFAM_ID'][0] for feature in pfam_features if 'PFAM_ID' in feature.qualifiers]
+    return [get_pfam_id(feature) for feature in pfam_features if get_pfam_id(feature)]
 
 
 # Taken from antiSMASH ClusterFinder module
@@ -186,6 +187,12 @@ def get_pfam_protein_id(pfam_feature):
     return pfam_feature.qualifiers.get('locus_tag')[0]
 
 
+def get_pfam_id(feature):
+    if feature.qualifiers.get('db_xref'):
+        return feature.qualifiers.get('db_xref')[0].split('.')[0]
+    return None
+
+
 def create_pfam_dict(pfam, proteins_by_id, detector_names, cluster_locations):
     locus_tag = get_pfam_protein_id(pfam)
     if locus_tag not in proteins_by_id:
@@ -198,7 +205,7 @@ def create_pfam_dict(pfam, proteins_by_id, detector_names, cluster_locations):
         gene_start=protein.location.start,
         gene_end=protein.location.end,
         gene_strand=protein.strand,
-        pfam_id=pfam.qualifiers.get('PFAM_ID')[0]
+        pfam_id=get_pfam_id(pfam)
     )
 
     if cluster_locations:
@@ -590,18 +597,6 @@ def is_valid_hmmscan_output(domtbl_path):
         logging.warning('Not using existing but incomplete HMMER hmmscan output: %s', domtbl_path)
         return False
     return True
-
-
-def choose_matplotlib_backend():
-    import matplotlib
-    gui_env = ['TKAgg', 'GTKAgg', 'Qt4Agg', 'WXAgg']
-    for gui in gui_env:
-        try:
-            matplotlib.use(gui, warn=False, force=True)
-            from matplotlib import pyplot as plt
-            break
-        except:
-            continue
 
 
 def print_elapsed_time(start_time):

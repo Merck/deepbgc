@@ -4,7 +4,7 @@ from deepbgc.output.writer import OutputWriter
 from deepbgc import util
 from matplotlib import pyplot as plt
 import numpy as np
-
+import warnings
 
 class PfamScorePlotWriter(OutputWriter):
 
@@ -70,9 +70,12 @@ class PfamScorePlotWriter(OutputWriter):
 
     def write(self, record):
         if len(self.sequence_titles) > self.max_sequences:
-            logging.warning('Reached maximum number of %s sequences for plotting, skipping sequence %s', self.max_sequences, record.id)
+            warnings.warn('Reached maximum number of {} sequences for plotting, some sequences will not be plotted.'.format(self.max_sequences))
             return
         scores = util.create_pfam_dataframe(record, add_in_cluster=True)
+        if scores.empty:
+            logging.debug('Skipping score plot for empty record %s', record.id)
+            return
         detector_meta = util.get_record_detector_meta(record)
         detector_names = np.unique([meta['name'] for meta in detector_meta.values()])
         score_columns = [util.format_bgc_score_column(name) for name in detector_names]

@@ -8,7 +8,7 @@ from deepbgc import util
 from matplotlib import pyplot as plt
 import numpy as np
 import logging
-
+import warnings
 
 class BGCRegionPlotWriter(OutputWriter):
 
@@ -91,7 +91,7 @@ class BGCRegionPlotWriter(OutputWriter):
 
     def write(self, record):
         if len(self.sequence_titles) > self.max_sequences:
-            logging.warning('Reached maximum number of %s sequences for plotting, skipping sequence %s', self.max_sequences, record.id)
+            warnings.warn('Reached maximum number of {} sequences for plotting, some sequences will not be plotted.'.format(self.max_sequences))
             return
         clusters = util.create_cluster_dataframe(record, add_pfams=False, add_proteins=False)
         title = record.id

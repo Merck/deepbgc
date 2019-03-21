@@ -46,12 +46,15 @@ Examples:
   deepbgc pipeline --continue --output sequence/ --label deepbgc_90_score --score 0.9 sequence/sequence.full.gbk
   """
 
+    LOG_FILENAME = 'LOG.txt'
+    PLOT_DIRNAME = 'evaluation'
+    TMP_DIRNAME = 'tmp'
+
     def add_arguments(self, parser):
 
         parser.add_argument(dest='inputs', nargs='+', help="Input sequence file path (FASTA, GenBank, Pfam CSV).")
 
         parser.add_argument('-o', '--output', required=False, help="Custom output directory path.")
-        parser.add_argument('--continue', dest='is_continue', default=False, action='store_true', help="Continue previous pipeline and save results to the existing output directory.")
         parser.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times.")
         parser.add_argument('--minimal-output', dest='is_minimal_output', action='store_true', default=False,
                             help="Produce minimal output with just the GenBank sequence file.")
@@ -83,7 +86,7 @@ Examples:
                             help="DeepBGC classification score threshold for assigning classes to BGCs (inclusive).")
 
     def run(self, inputs, output, detectors, no_detector, labels, classifiers, no_classifier,
-            is_continue, is_minimal_output, limit_to_record, score, classifier_score, merge_max_protein_gap, merge_max_nucl_gap, min_nucl,
+            is_minimal_output, limit_to_record, score, classifier_score, merge_max_protein_gap, merge_max_nucl_gap, min_nucl,
             min_proteins, min_domains, min_bio_domains):
         if not detectors:
             detectors = ['deepbgc']
@@ -93,24 +96,16 @@ Examples:
             # if not specified, set output path to name of first input file without extension
             output, _ = os.path.splitext(os.path.basename(os.path.normpath(inputs[0])))
 
-        if os.path.exists(output):
-            if not os.path.isdir(output):
-                raise ValueError('Output path already exists and is not a directory: {}'.format(output))
-            num_outputs_in_dir = len(set(os.listdir(output)).difference(['tmp', 'evaluation']))
-            if not is_continue and num_outputs_in_dir:
-                raise ValueError('Output directory already exists and is not empty: {}'.format(output),
-                                 'Use --output my/dir/ to specify a different directory',
-                                 'Or use --continue to write in the existing directory')
-        else:
+        if not os.path.exists(output):
             os.mkdir(output)
 
         # Save log to LOG.txt file
         logger = logging.getLogger('')
-        logger.addHandler(logging.FileHandler(os.path.join(output, 'LOG.txt')))
+        logger.addHandler(logging.FileHandler(os.path.join(output, self.LOG_FILENAME)))
 
         # Define report dir paths
-        tmp_path = os.path.join(output, 'tmp')
-        evaluation_path = os.path.join(output, 'evaluation')
+        tmp_path = os.path.join(output, self.TMP_DIRNAME)
+        evaluation_path = os.path.join(output, self.PLOT_DIRNAME)
         output_file_name = os.path.basename(os.path.normpath(output))
 
         steps = []
