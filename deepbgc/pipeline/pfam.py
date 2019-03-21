@@ -8,7 +8,7 @@ import os
 
 import pandas as pd
 
-from deepbgc.data import PFAM_DB_FILE_NAME, PFAM_CLANS_FILE_NAME
+from deepbgc.data import PFAM_DB_FILE_NAME, PFAM_DB_VERSION, PFAM_CLANS_FILE_NAME
 from Bio import SeqIO, SearchIO
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
@@ -106,16 +106,16 @@ class HmmscanPfamRecordAnnotator(object):
             for hit in query.hits:
                 best_index = np.argmin([hsp.evalue for hsp in hit.hsps])
                 best_hsp = hit.hsps[best_index]
-                pfam_id = hit.accession.split('.')[0]
+                pfam_id = hit.accession
                 evalue = float(best_hsp.evalue)
                 if evalue > self.max_evalue:
                     continue
                 location = self._get_pfam_loc(best_hsp.query_start, best_hsp.query_end, protein)
                 qualifiers = {
-                    'PFAM_ID': [pfam_id],
+                    'db_xref': [pfam_id],
                     'evalue': evalue,
                     'locus_tag': [query.id],
-                    'database': [PFAM_DB_FILE_NAME],
+                    'database': [PFAM_DB_VERSION],
                 }
                 description = pfam_descriptions.get(pfam_id)
                 if description:
