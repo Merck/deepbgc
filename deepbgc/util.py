@@ -592,18 +592,6 @@ def is_valid_hmmscan_output(domtbl_path):
     return True
 
 
-def choose_matplotlib_backend():
-    import matplotlib
-    gui_env = ['TKAgg', 'GTKAgg', 'Qt4Agg', 'WXAgg']
-    for gui in gui_env:
-        try:
-            matplotlib.use(gui, warn=False, force=True)
-            from matplotlib import pyplot as plt
-            break
-        except:
-            continue
-
-
 def print_elapsed_time(start_time):
     s = (datetime.now() - start_time).total_seconds()
     return '{:.0f}h{:.0f}m{:.0f}s'.format(s//3600, (s//60) % 60, s % 60)

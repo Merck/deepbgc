@@ -41,9 +41,12 @@ class ProdigalProteinRecordAnnotator(object):
             logging.warning(err.strip())
             logging.warning('== End Prodigal Error. ============')
 
-            if os.stat(protein_path).st_size == 0:
+            if 'Sequence must be' in err:
+                logging.warning('No proteins detected in short sequence, moving on.')
+            elif os.stat(protein_path).st_size == 0:
                 raise ValueError("Prodigal produced empty output, make sure to use a DNA sequence.")
-            raise ValueError("Unexpected error detecting genes using Prodigal")
+            else:
+                raise ValueError("Unexpected error detecting genes using Prodigal")
 
         proteins = SeqIO.parse(protein_path, 'fasta')
         for protein in proteins:

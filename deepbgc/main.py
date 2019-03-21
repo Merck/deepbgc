@@ -19,8 +19,8 @@ except ImportError:
     from deepbgc import __version__
 
 import argparse
-from deepbgc import util
-util.choose_matplotlib_backend()
+import matplotlib
+matplotlib.use('Agg')
 from deepbgc.command.prepare import PrepareCommand
 from deepbgc.command.download import DownloadCommand
 from deepbgc.command.pipeline import PipelineCommand

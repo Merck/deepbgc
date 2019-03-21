@@ -69,6 +69,10 @@ class HmmscanPfamRecordAnnotator(object):
         proteins_by_id = util.get_proteins_by_id(proteins)
         domtbl_path = self.tmp_path_prefix + '.pfam.domtbl.txt'
 
+        if not proteins:
+            logging.warning('No	proteins in sequence %s, skipping protein domain detection', self.record.id)
+            return
+
         if util.is_valid_hmmscan_output(domtbl_path):
             cached = True
             logging.info('Reusing already existing HMMER hmmscan result: %s', domtbl_path)

@@ -20,6 +20,9 @@ class DeepBGCClassifier(PipelineStep):
 
     def run(self, record):
         cluster_features = util.get_cluster_features(record)
+        if not len(cluster_features):
+            return
+
         logging.info('Classifying %s BGCs using %s model in %s', len(cluster_features), self.classifier_name, record.id)
 
         # Create list of DataFrames with Pfam sequences (one for each cluster)
@@ -45,7 +48,8 @@ class DeepBGCClassifier(PipelineStep):
             if feature.qualifiers.get(class_column):
                 prev_classes = feature.qualifiers.get(class_column)[0].split('-')
                 all_classes = sorted(list(set(all_classes + prev_classes)))
-            feature.qualifiers[class_column] = ['-'.join(all_classes)]
+            if all_classes:
+                feature.qualifiers[class_column] = ['-'.join(all_classes)]
             predicted_classes += new_classes or ['no confident class']
 
         # Add detector metadata to the record as a structured comment
