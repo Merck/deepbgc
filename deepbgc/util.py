@@ -326,10 +326,14 @@ def decode_class_score_string(string):
     return pd.Series([p[1] for p in pairs], [p[0] for p in pairs])
 
 
-def get_downloads_dir(versioned=True):
+def get_data_release_version():
     from deepbgc.data import DATA_RELEASE_VERSION
+    return os.environ.get(DEEPBGC_DATA_RELEASE_VERSION, DATA_RELEASE_VERSION)
+
+
+def get_downloads_dir(versioned=True):
     downloads_dir = os.environ.get(DEEPBGC_DOWNLOADS_DIR)
-    data_release_version = os.environ.get(DEEPBGC_DATA_RELEASE_VERSION, DATA_RELEASE_VERSION)
+    data_release_version = get_data_release_version()
     if not downloads_dir:
         downloads_dir = user_data_dir("deepbgc", version="data")
     version = data_release_version if versioned else 'common'
@@ -471,11 +475,6 @@ def fix_record_locus(record):
         new_locus = record.name[:MAX_LEN-3] + '...'
         logging.warning('Trimming long record locus "{}" to "{}"'.format(record.name, new_locus))
         record.name = new_locus
-
-    if len(record.id) > MAX_LEN:
-        new_locus = record.id[:MAX_LEN-3] + '...'
-        logging.warning('Trimming long record ID "{}" to "{}"'.format(record.id, new_locus))
-        record.id = new_locus
 
 
 def fix_duplicate_cds(record):
