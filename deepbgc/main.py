@@ -98,18 +98,17 @@ def run(argv=None):
     logging.basicConfig(format='%(levelname)-7s %(asctime)s   %(message)s',
                         level=log_level, datefmt="%d/%m %H:%M:%S")
 
-    logging.info("""
- _____                  ____    ____   ____ 
- |  _ \  ___  ___ ____ | __ )  / ___) / ___)
- | | \ \/ _ \/ _ \  _ \|  _ \ | |  _ | |    
- | |_/ /  __/  __/ |_) | |_) || |_| || |___ 
- |____/ \___|\___| ___/|____/  \____| \____)
-=================|_|===== version """ + __version__ + " =====")
 
     args.func.run(**args_dict)
 
 
 def main(argv=None):
+    print(""" _____                  ____    ____   ____ 
+ |  _ \  ___  ___ ____ | __ )  / ___) / ___)
+ | | \ \/ _ \/ _ \  _ \|  _ \ | |  _ | |    
+ | |_/ /  __/  __/ |_) | |_) || |_| || |___ 
+ |____/ \___|\___| ___/|____/  \____| \____)
+=================|_|===== version """ + __version__ + " =====", file=sys.stderr)
     try:
         run(argv)
     except KeyboardInterrupt:
