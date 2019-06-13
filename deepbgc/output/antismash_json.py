@@ -39,7 +39,7 @@ class AntismashJSONWriter(OutputWriter):
         self.record_protoclusters.append(protoclusters)
         for detector_label, meta in util.get_record_detector_meta(record).items():
             for k, v in meta.items():
-                self.tool_meta['{}_{}'.format(detector_label, k)] = v
+                self.tool_meta['{}_{}'.format(detector_label, k)] = str(v)
 
     def _get_cluster_classes_str(self, cluster, classifier_name):
         class_str_list = cluster.qualifiers.get(util.format_classification_column(classifier_name))
