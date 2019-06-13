@@ -2,6 +2,7 @@ from deepbgc.output.writer import OutputWriter
 from deepbgc import util
 from deepbgc import __version__
 import json
+import collections
 
 ANTISMASH_SUBREGION_LABEL_MAX_LENGTH = 20
 
@@ -13,7 +14,7 @@ class AntismashJSONWriter(OutputWriter):
         self.record_ids = []
         self.record_subregions = []
         self.record_protoclusters = []
-        self.tool_meta = {}
+        self.tool_meta = collections.OrderedDict()
 
     @classmethod
     def get_description(cls):
@@ -36,9 +37,9 @@ class AntismashJSONWriter(OutputWriter):
         self.record_ids.append(record.id)
         self.record_subregions.append(subregions)
         self.record_protoclusters.append(protoclusters)
-        # TODO add meta info from all detectors?
-        if not self.tool_meta:
-            self.tool_meta = util.get_record_detector_meta(record)
+        for detector_label, meta in util.get_record_detector_meta(record).items():
+            for k, v in meta.items():
+                self.tool_meta['{}_{}'.format(detector_label, k)] = v
 
     def _get_cluster_classes_str(self, cluster, classifier_name):
         class_str_list = cluster.qualifiers.get(util.format_classification_column(classifier_name))
