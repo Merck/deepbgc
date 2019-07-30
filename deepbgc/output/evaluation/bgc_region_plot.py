@@ -34,6 +34,9 @@ class BGCRegionPlotWriter(OutputWriter):
         num_sequences = len(self.sequence_titles)
         num_detectors = len(self.detector_labels)
 
+        if not num_sequences:
+            return
+
         fig, axes = plt.subplots(num_sequences, 1, figsize=(15, 1 + 0.25 * (num_detectors + 2) * num_sequences))
         if num_sequences == 1:
             axes = [axes]
@@ -50,7 +53,9 @@ class BGCRegionPlotWriter(OutputWriter):
                 continue
 
             end = clusters['nucl_end'].max()
-            x_step = 100000
+            x_step = 10000
+            if end / x_step > 20:
+                x_step = 100000
             if end / x_step > 20:
                 x_step = 200000
             if end / x_step > 20:

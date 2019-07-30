@@ -132,12 +132,12 @@ Examples:
 
         writers = []
         writers.append(GenbankWriter(out_path=os.path.join(output, output_file_name+'.full.gbk')))
+        #writers.append(AntismashJSONWriter(out_path=os.path.join(output, output_file_name + '.antismash.json')))
         is_evaluation = False
         if not is_minimal_output:
             writers.append(BGCGenbankWriter(out_path=os.path.join(output, output_file_name+'.bgc.gbk')))
             writers.append(ClusterTSVWriter(out_path=os.path.join(output, output_file_name+'.bgc.tsv')))
             writers.append(PfamTSVWriter(out_path=os.path.join(output, output_file_name+'.pfam.tsv')))
-            writers.append(AntismashJSONWriter(out_path=os.path.join(output, output_file_name+'.antismash.json')))
 
             is_evaluation = True
             writers.append(PfamScorePlotWriter(out_path=os.path.join(evaluation_path, output_file_name + '.score.png')))
