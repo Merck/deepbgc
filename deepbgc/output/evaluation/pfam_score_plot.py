@@ -29,6 +29,8 @@ class PfamScorePlotWriter(OutputWriter):
 
     def save_plot(self):
         num_sequences = len(self.sequence_titles)
+        if not num_sequences:
+            return
         fig, axes = plt.subplots(num_sequences, 1, figsize=(15, 1+1.5*num_sequences))
         if num_sequences == 1:
             axes = [axes]
@@ -38,7 +40,7 @@ class PfamScorePlotWriter(OutputWriter):
             axes[i].set_xlabel('')
             axes[i].set_ylabel('BGC score')
             axes[i].set_title(sequence_title)
-            x = detector_scores.index
+            x = detector_scores.index.values
             xlim = (min(x), max(x))
             axes[i].set_xlim(xlim)
             if detector_scores.empty:
@@ -47,7 +49,7 @@ class PfamScorePlotWriter(OutputWriter):
             # For each detector score column
             color_idx = 0
             for column, thresholds in zip(detector_scores.columns, sequence_thresholds):
-                y = detector_scores[column]
+                y = detector_scores[column].values
                 if column == 'in_cluster':
                     color = 'grey'
                     full_height_val = y * (1 + 2 * offset) - offset
@@ -56,7 +58,8 @@ class PfamScorePlotWriter(OutputWriter):
                 else:
                     color = cmap(color_idx)
                     color_idx += 1
-                    axes[i].plot(x, y, lw=0.75, alpha=0.6, color=color, label=column)
+                    marker = 'o' if len(x) == 1 else None
+                    axes[i].plot(x, y, lw=0.75, alpha=0.6, color=color, label=column, marker=marker)
                     axes[i].hlines(thresholds, xlim[0], xlim[1], color=color, linestyles='--', lw=0.75, alpha=0.5)
             if len(detector_scores.columns) > 1:
                 lgnd = axes[i].legend(bbox_to_anchor=(1.02, 1), loc='upper left')

@@ -24,6 +24,7 @@ from deepbgc.output.evaluation.bgc_region_plot import BGCRegionPlotWriter
 from deepbgc.output.cluster_tsv import ClusterTSVWriter
 from deepbgc.output.evaluation.pfam_score_plot import PfamScorePlotWriter
 from deepbgc.output.pfam_tsv import PfamTSVWriter
+from deepbgc.output.antismash_json import AntismashJSONWriter
 
 
 class PipelineCommand(BaseCommand):
@@ -131,6 +132,7 @@ Examples:
 
         writers = []
         writers.append(GenbankWriter(out_path=os.path.join(output, output_file_name+'.full.gbk')))
+        #writers.append(AntismashJSONWriter(out_path=os.path.join(output, output_file_name + '.antismash.json')))
         is_evaluation = False
         if not is_minimal_output:
             writers.append(BGCGenbankWriter(out_path=os.path.join(output, output_file_name+'.bgc.gbk')))
