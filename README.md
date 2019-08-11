@@ -13,6 +13,12 @@ Product class and activity of detected BGCs is predicted using a Random Forest c
 
 ![DeepBGC architecture](images/deepbgc.architecture.png?raw=true "DeepBGC architecture")
 
+## Publications
+
+A deep learning genome-mining strategy for biosynthetic gene cluster prediction <br>
+Geoffrey D Hannigan,  David Prihoda et al., Nucleic Acids Research, gkz654, https://doi.org/10.1093/nar/gkz654
+
+
 ## Install using bioconda (recommended)
 
 - Install Bioconda by following Step 1 and 2 from: https://bioconda.github.io/
@@ -72,3 +78,5 @@ Data can be downloaded on the [releases page](https://github.com/Merck/deepbgc/r
 You can train your own BGC detection and classification models, see `deepbgc train --help` for documentation and examples.
 
 DeepBGC positives, negatives and other training and validation data can be found on the [releases page](https://github.com/Merck/deepbgc/releases).
+
+If you have any questions about using or training DeepBGC, feel free to submit an issue.
