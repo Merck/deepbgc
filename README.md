@@ -103,7 +103,7 @@ JSON template for DeepBGC LSTM with pfam2vec is structured as follows:
     "timesteps": 256, - Number of pfam2vec vectors trained in one batch
     "validation_size": 0, - Fraction of training data to use for validation (if validation data is not provided explicitly). Use 0.2 for 20% data used for testing.
     "verbose": 1, - Verbosity during training
-    "num_epochs": 1000, - Number of epochs to train for
+    "num_epochs": 1000, - Number of passes over your training set during training. You probably want to use a lower number if not using early stopping on validation data.
     "early_stopping" : { - Stop model training when at certain validation performance
       "monitor": "val_auc_roc", - Use validation AUC ROC to observe performance
       "min_delta": 0.0001, - Stop training when the improvement in the last epochs did not improve more than 0.0001
