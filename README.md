@@ -73,10 +73,54 @@ Data can be downloaded on the [releases page](https://github.com/Merck/deepbgc/r
 
 ![Detected BGC Regions](images/deepbgc.bgc.png?raw=true "Detected BGC regions")
 
-### Model training
+## Train DeepBGC on your own data
 
 You can train your own BGC detection and classification models, see `deepbgc train --help` for documentation and examples.
 
-DeepBGC positives, negatives and other training and validation data can be found on the [releases page](https://github.com/Merck/deepbgc/releases).
+DeepBGC positives, negatives and other training and validation data can be found in [release 0.1.0](https://github.com/Merck/deepbgc/releases/tag/v0.1.0) and [release 0.1.5](https://github.com/Merck/deepbgc/releases/tag/v0.1.5).
 
 If you have any questions about using or training DeepBGC, feel free to submit an issue.
+
+### JSON model training template files
+
+DeepBGC is using JSON template files to define model architecture and training parameters. All templates can be downloaded in [release 0.1.0](https://github.com/Merck/deepbgc/releases/tag/v0.1.0).
+
+JSON template for DeepBGC LSTM with pfam2vec is structured as follows:
+```
+{
+  "type": "KerasRNN", - Model architecture (KerasRNN/DiscreteHMM/GeneBorderHMM)
+  "build_params": { - Parameters for model architecture
+    "batch_size": 16, - Number of splits of training data that is trained in parallel 
+    "hidden_size": 128, - Size of vector storing the LSTM inner state
+    "stateful": true - Remember previous sequence when training next batch
+  },
+  "fit_params": {
+    "timesteps": 256, - Number of pfam2vec vectors trained in one batch
+    "validation_size": 0, - Fraction of training data to use for validation (if validation data is not provided explicitly). Use 0.2 for 20% data used for testing.
+    "verbose": 1, - Verbosity during training
+    "num_epochs": 1000, - Number of epochs to train for
+    "early_stopping" : { - Stop model training when at certain validation performance
+      "monitor": "val_auc_roc", - Use validation AUC ROC to observe performance
+      "min_delta": 0.0001, - Stop training when the improvement in the last epochs did not improve more than 0.0001
+      "patience": 20, - How many of the last epochs to check for improvement
+      "mode": "max" - Stop training when given metric stops increasing (use "min" for decreasing metrics like loss)
+    },
+    "shuffle": true, - Shuffle samples in each epoch. Will use "sequence_id" field to group pfam vectors belonging to the same sample and shuffle them together 
+    "optimizer": "adam", - Optimizer algorithm
+    "learning_rate": 0.0001, - Learning rate
+    "weighted": true - Increase weight of less-represented class. Will give more weight to BGC training samples if the non-BGC set is larger.
+  },
+  "input_params": {
+    "features": [ - Array of features to use in model, see deepbgc/features.py
+      {
+        "type": "ProteinBorderTransformer" - Add two binary flags for pfam domains found at beginning or at end of protein
+      },
+      {
+        "type": "Pfam2VecTransformer", - Convert pfam_id field to pfam2vec vector using provided pfam2vec table
+        "vector_path": "#{PFAM2VEC}" - PFAM2VEC variable is filled in using command line argument --config
+      }
+    ]
+  }
+}
+```
+
