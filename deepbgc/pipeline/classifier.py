@@ -6,15 +6,21 @@ import pandas as pd
 from deepbgc.models.wrapper import SequenceModelWrapper
 from deepbgc.pipeline.step import PipelineStep
 import six
+import os
 
 class DeepBGCClassifier(PipelineStep):
 
     def __init__(self, classifier, score_threshold=0.5):
         if classifier is None or not isinstance(classifier, six.string_types):
-            raise ValueError('Expected classifier name, got {}'.format(classifier))
+            raise ValueError('Expected classifier name or path, got {}'.format(classifier))
+        if os.path.exists(classifier):
+            classifier_path = classifier
+            # Set classifier name to filename without suffix
+            classifier, _ = os.path.splitext(os.path.basename(classifier))
+        else:
+            classifier_path = util.get_model_path(classifier, 'classifier')
         self.classifier_name = classifier
         self.score_threshold = score_threshold
-        classifier_path = util.get_model_path(self.classifier_name, 'classifier')
         self.model = SequenceModelWrapper.load(classifier_path)
         self.total_class_counts = pd.Series()
 
