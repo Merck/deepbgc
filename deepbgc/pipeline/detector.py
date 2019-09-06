@@ -16,7 +16,7 @@ class DeepBGCDetector(PipelineStep):
         self.score_threshold = score_threshold
         if detector is None or not isinstance(detector, six.string_types):
             raise ValueError('Expected detector name or path, got {}'.format(detector))
-        if os.path.exists(detector):
+        if os.path.exists(detector) or os.path.sep in detector:
             model_path = detector
             # Set detector name to filename without suffix
             detector, _ = os.path.splitext(os.path.basename(detector))
