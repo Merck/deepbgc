@@ -60,11 +60,16 @@ Proteins and Pfam domains are detected automatically if not already annotated (H
 # Show command help docs
 deepbgc pipeline --help
 
-# Detect and classify BGCs in mySequence.fa using DeepBGC algorithm and save the output to mySequence directory.
+# Detect and classify BGCs in mySequence.fa using DeepBGC detector.
 deepbgc pipeline mySequence.fa
+
+# Detect and classify BGCs in mySequence.fa using custom DeepBGC detector trained on your own data.
+deepbgc pipeline --detector path/to/myDetector.pkl mySequence.fa
 ```
 
-This will produce a directory with multiple files and a README.txt with file descriptions.
+This will produce a `mySequence` directory with multiple files and a README.txt with file descriptions.
+
+See [Train DeepBGC on your own data](#train-deepbgc-on-your-own-data) section below for more information about training a custom detector or classifier.
 
 #### Example output
 
@@ -98,7 +103,7 @@ JSON template for DeepBGC LSTM with pfam2vec is structured as follows:
     "timesteps": 256, - Number of pfam2vec vectors trained in one batch
     "validation_size": 0, - Fraction of training data to use for validation (if validation data is not provided explicitly). Use 0.2 for 20% data used for testing.
     "verbose": 1, - Verbosity during training
-    "num_epochs": 1000, - Number of epochs to train for
+    "num_epochs": 1000, - Number of passes over your training set during training. You probably want to use a lower number if not using early stopping on validation data.
     "early_stopping" : { - Stop model training when at certain validation performance
       "monitor": "val_auc_roc", - Use validation AUC ROC to observe performance
       "min_delta": 0.0001, - Stop training when the improvement in the last epochs did not improve more than 0.0001
@@ -124,3 +129,12 @@ JSON template for DeepBGC LSTM with pfam2vec is structured as follows:
 }
 ```
 
+### Using your trained model
+
+Since version `0.1.10` you can provide a direct path to the detector or classifier model like so:
+```bash
+deepbgc pipeline \
+    mySequence.fa \
+    --detector path/to/myDetector.pkl \
+    --classifier path/to/myClassifier.pkl 
+```

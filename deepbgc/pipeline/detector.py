@@ -8,13 +8,21 @@ from deepbgc import util
 from deepbgc.pipeline.step import PipelineStep
 import collections
 import six
+import os
 
 class DeepBGCDetector(PipelineStep):
     def __init__(self, detector, label=None, score_threshold=0.5, merge_max_protein_gap=0,
                  merge_max_nucl_gap=0, min_nucl=1, min_proteins=1, min_domains=1, min_bio_domains=0):
         self.score_threshold = score_threshold
         if detector is None or not isinstance(detector, six.string_types):
-            raise ValueError('Expected detector name, got {}'.format(detector))
+            raise ValueError('Expected detector name or path, got {}'.format(detector))
+        if os.path.exists(detector) or os.path.sep in detector:
+            model_path = detector
+            # Set detector name to filename without suffix
+            detector, _ = os.path.splitext(os.path.basename(detector))
+        else:
+            model_path = util.get_model_path(detector, 'detector')
+
         self.detector_name = detector
         self.detector_label = label or self.detector_name
         self.score_column = util.format_bgc_score_column(self.detector_name)
@@ -24,7 +32,6 @@ class DeepBGCDetector(PipelineStep):
         self.min_proteins = min_proteins
         self.min_domains = min_domains
         self.min_bio_domains = min_bio_domains
-        model_path = util.get_model_path(self.detector_name, 'detector')
         self.model = SequenceModelWrapper.load(model_path)
         self.num_detected = 0
 

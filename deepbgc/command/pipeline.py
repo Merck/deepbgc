@@ -63,7 +63,7 @@ Examples:
         no_models_message = 'run "deepbgc download" to download models'
         detector_names = util.get_available_models('detector')
         group.add_argument('-d', '--detector', dest='detectors', action='append', default=[],
-                           help="Trained detection model name ({}). "
+                           help="Trained detection model name ({}) or path to trained model pickle file. "
                                 "Can be provided multiple times (-d first -d second).".format(', '.join(detector_names) or no_models_message))
         group.add_argument('--no-detector', action='store_true', help="Disable BGC detection.")
         group.add_argument('-l', '--label', dest='labels', action='append', default=[], help="Label for detected clusters (equal to --detector by default). "
@@ -80,7 +80,7 @@ Examples:
         group = parser.add_argument_group('BGC classification options', '')
         classifier_names = util.get_available_models('classifier')
         group.add_argument('-c', '--classifier', dest='classifiers', action='append', default=[],
-                            help="Trained classification model name ({}). "
+                            help="Trained classification model name ({}) or path to trained model pickle file. "
                                  "Can be provided multiple times (-c first -c second).".format(', '.join(classifier_names) or no_models_message))
         group.add_argument('--no-classifier', action='store_true', help="Disable BGC classification.")
         group.add_argument('--classifier-score', default=0.5, type=float,
@@ -117,9 +117,9 @@ Examples:
             elif len(labels) != len(detectors):
                 raise ValueError('A separate label should be provided for each of the detectors: {}'.format(detectors))
 
-            for detector_name, label in zip(detectors, labels):
+            for detector, label in zip(detectors, labels):
                 steps.append(DeepBGCDetector(
-                    detector=detector_name,
+                    detector=detector,
                     label=label,
                     score_threshold=score,
                     merge_max_protein_gap=merge_max_protein_gap,
@@ -148,8 +148,8 @@ Examples:
         writers.append(ReadmeWriter(out_path=os.path.join(output, 'README.txt'), root_path=output, writers=writers))
 
         if not no_classifier:
-            for classifier_name in classifiers:
-                steps.append(DeepBGCClassifier(classifier=classifier_name, score_threshold=classifier_score))
+            for classifier in classifiers:
+                steps.append(DeepBGCClassifier(classifier=classifier, score_threshold=classifier_score))
 
         # Create temp and evaluation dir
         if not os.path.exists(tmp_path):
