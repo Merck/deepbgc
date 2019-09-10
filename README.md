@@ -90,7 +90,7 @@ If you have any questions about using or training DeepBGC, feel free to submit a
 
 DeepBGC is using JSON template files to define model architecture and training parameters. All templates can be downloaded in [release 0.1.0](https://github.com/Merck/deepbgc/releases/tag/v0.1.0).
 
-JSON template for DeepBGC LSTM with pfam2vec is structured as follows:
+JSON template for DeepBGC LSTM **detector** with pfam2vec is structured as follows:
 ```
 {
   "type": "KerasRNN", - Model architecture (KerasRNN/DiscreteHMM/GeneBorderHMM)
@@ -123,6 +123,25 @@ JSON template for DeepBGC LSTM with pfam2vec is structured as follows:
       {
         "type": "Pfam2VecTransformer", - Convert pfam_id field to pfam2vec vector using provided pfam2vec table
         "vector_path": "#{PFAM2VEC}" - PFAM2VEC variable is filled in using command line argument --config
+      }
+    ]
+  }
+}
+```
+
+JSON template for Random Forest **classifier** is structured as follows:
+```
+{
+  "type": "RandomForestClassifier", - Type of classifier (RandomForestClassifier)
+  "build_params": {
+    "n_estimators": 100, - Number of trees in random forest
+    "random_state": 0 - Random seed used to get same result each time
+  },
+  "input_params": {
+    "sequence_as_vector": true, - Convert each sample into a single vector
+    "features": [
+      {
+        "type": "OneHotEncodingTransformer" - Convert each sequence of Pfams into a single binary vector (Pfam set)
       }
     ]
   }
