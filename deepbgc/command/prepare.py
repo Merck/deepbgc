@@ -31,11 +31,11 @@ Examples:
   """
 
     def add_arguments(self, parser):
-        parser.add_argument(dest='inputs', nargs='+', help="Input sequence file path(s) (FASTA/GenBank).")
+        parser.add_argument(dest='inputs', nargs='+', help="Input sequence file path(s) (FASTA/GenBank)")
         group = parser.add_argument_group('required arguments', '')
-        parser.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times.")
-        group.add_argument('--output-gbk', required=False, help="Output GenBank file path.")
-        group.add_argument('--output-tsv', required=False, help="Output TSV file path.")
+        parser.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times")
+        group.add_argument('--output-gbk', required=False, help="Output GenBank file path")
+        group.add_argument('--output-tsv', required=False, help="Output TSV file path")
 
     def run(self, inputs, limit_to_record, output_gbk, output_tsv):
         first_output = output_gbk or output_tsv

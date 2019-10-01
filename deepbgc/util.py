@@ -331,11 +331,15 @@ def get_data_release_version():
     return os.environ.get(DEEPBGC_DATA_RELEASE_VERSION, DATA_RELEASE_VERSION)
 
 
+def get_default_downloads_dir():
+    return user_data_dir("deepbgc", version="data")
+
+
 def get_downloads_dir(versioned=True):
     downloads_dir = os.environ.get(DEEPBGC_DOWNLOADS_DIR)
     data_release_version = get_data_release_version()
     if not downloads_dir:
-        downloads_dir = user_data_dir("deepbgc", version="data")
+        downloads_dir = get_default_downloads_dir()
     version = data_release_version if versioned else 'common'
     return os.path.join(downloads_dir, version)
 

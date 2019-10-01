@@ -53,38 +53,38 @@ Examples:
 
     def add_arguments(self, parser):
 
-        parser.add_argument(dest='inputs', nargs='+', help="Input sequence file path (FASTA, GenBank, Pfam CSV).")
+        parser.add_argument(dest='inputs', nargs='+', help="Input sequence file path (FASTA, GenBank, Pfam CSV)")
 
-        parser.add_argument('-o', '--output', required=False, help="Custom output directory path.")
-        parser.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times.")
+        parser.add_argument('-o', '--output', required=False, help="Custom output directory path")
+        parser.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times")
         parser.add_argument('--minimal-output', dest='is_minimal_output', action='store_true', default=False,
-                            help="Produce minimal output with just the GenBank sequence file.")
+                            help="Produce minimal output with just the GenBank sequence file")
         group = parser.add_argument_group('BGC detection options', '')
         no_models_message = 'run "deepbgc download" to download models'
         detector_names = util.get_available_models('detector')
         group.add_argument('-d', '--detector', dest='detectors', action='append', default=[],
                            help="Trained detection model name ({}) or path to trained model pickle file. "
-                                "Can be provided multiple times (-d first -d second).".format(', '.join(detector_names) or no_models_message))
-        group.add_argument('--no-detector', action='store_true', help="Disable BGC detection.")
+                                "Can be provided multiple times (-d first -d second)".format(', '.join(detector_names) or no_models_message))
+        group.add_argument('--no-detector', action='store_true', help="Disable BGC detection")
         group.add_argument('-l', '--label', dest='labels', action='append', default=[], help="Label for detected clusters (equal to --detector by default). "
-                                                                                             "If multiple detectors are provided, a label should be provided for each one.")
+                                                                                             "If multiple detectors are provided, a label should be provided for each one")
         group.add_argument('-s', '--score', default=0.5, type=float,
-                            help="Average protein-wise DeepBGC score threshold for extracting BGC regions from Pfam sequences.")
-        group.add_argument('--merge-max-protein-gap', default=0, type=int, help="Merge detected BGCs within given number of proteins.")
-        group.add_argument('--merge-max-nucl-gap', default=0, type=int, help="Merge detected BGCs within given number of nucleotides.")
-        group.add_argument('--min-nucl', default=1, type=int, help="Minimum BGC nucleotide length.")
-        group.add_argument('--min-proteins', default=1, type=int, help="Minimum number of proteins in a BGC.")
-        group.add_argument('--min-domains', default=1, type=int, help="Minimum number of protein domains in a BGC.")
-        group.add_argument('--min-bio-domains', default=0, type=int, help="Minimum number of known biosynthetic protein domains in a BGC (from antiSMASH ClusterFinder).")
+                            help="Average protein-wise DeepBGC score threshold for extracting BGC regions from Pfam sequences (default: %(default)s)")
+        group.add_argument('--merge-max-protein-gap', default=0, type=int, help="Merge detected BGCs within given number of proteins (default: %(default)s)")
+        group.add_argument('--merge-max-nucl-gap', default=0, type=int, help="Merge detected BGCs within given number of nucleotides (default: %(default)s)")
+        group.add_argument('--min-nucl', default=1, type=int, help="Minimum BGC nucleotide length (default: %(default)s)")
+        group.add_argument('--min-proteins', default=1, type=int, help="Minimum number of proteins in a BGC (default: %(default)s)")
+        group.add_argument('--min-domains', default=1, type=int, help="Minimum number of protein domains in a BGC (default: %(default)s)")
+        group.add_argument('--min-bio-domains', default=0, type=int, help="Minimum number of known biosynthetic (as defined by antiSMASH) protein domains in a BGC (default: %(default)s)")
 
         group = parser.add_argument_group('BGC classification options', '')
         classifier_names = util.get_available_models('classifier')
         group.add_argument('-c', '--classifier', dest='classifiers', action='append', default=[],
                             help="Trained classification model name ({}) or path to trained model pickle file. "
-                                 "Can be provided multiple times (-c first -c second).".format(', '.join(classifier_names) or no_models_message))
-        group.add_argument('--no-classifier', action='store_true', help="Disable BGC classification.")
+                                 "Can be provided multiple times (-c first -c second)".format(', '.join(classifier_names) or no_models_message))
+        group.add_argument('--no-classifier', action='store_true', help="Disable BGC classification")
         group.add_argument('--classifier-score', default=0.5, type=float,
-                            help="DeepBGC classification score threshold for assigning classes to BGCs (inclusive).")
+                            help="DeepBGC classification score threshold for assigning classes to BGCs (default: %(default)s)")
 
     def run(self, inputs, output, detectors, no_detector, labels, classifiers, no_classifier,
             is_minimal_output, limit_to_record, score, classifier_score, merge_max_protein_gap, merge_max_nucl_gap, min_nucl,
