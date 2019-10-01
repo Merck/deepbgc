@@ -29,6 +29,6 @@ def test_integration_pfam_annotator(tmpdir):
     assert pfam.qualifiers.get('db_xref') == ['PF00005.26']
     assert pfam.qualifiers.get('locus_tag') == ['AAK73498.1']
     assert pfam.qualifiers.get('description') == ['ABC transporter']
-    assert pfam.qualifiers.get('database') == ['Pfam-A.31.0.hmm']
+    assert pfam.qualifiers.get('database') == ['31.0']
 
     assert_sorted_features(record)

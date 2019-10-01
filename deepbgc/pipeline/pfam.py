@@ -94,6 +94,7 @@ class HmmscanPfamRecordAnnotator(object):
 
         # Read descriptions from Pfam clan TSV
         pfam_descriptions = self._get_pfam_descriptions()
+        print('DESCRIPTIONS: {}'.format(pfam_descriptions))
 
         # Extract all matched domain hits
         num = 0
@@ -117,7 +118,8 @@ class HmmscanPfamRecordAnnotator(object):
                     'locus_tag': [query.id],
                     'database': [PFAM_DB_VERSION],
                 }
-                description = pfam_descriptions.get(pfam_id)
+                short_pfam_id = pfam_id.rsplit('.', maxsplit=1)[0]
+                description = pfam_descriptions.get(short_pfam_id)
                 if description:
                     qualifiers['description'] = [description]
                 pfam = SeqFeature(
