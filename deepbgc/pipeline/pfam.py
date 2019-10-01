@@ -94,7 +94,6 @@ class HmmscanPfamRecordAnnotator(object):
 
         # Read descriptions from Pfam clan TSV
         pfam_descriptions = self._get_pfam_descriptions()
-        print('DESCRIPTIONS: {}'.format(pfam_descriptions))
 
         # Extract all matched domain hits
         num = 0
