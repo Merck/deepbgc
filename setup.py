@@ -13,7 +13,7 @@ install_requires = [
     'pandas>=0.24.1',
     'numpy>=1.16.1',
     'keras>=2.2.4',
-    'tensorflow>=1.12.0',
+    'tensorflow>=1.12.0,<2.0.0',
     'matplotlib>=2.2.3',
     'appdirs>=1.4.3'
 ]
