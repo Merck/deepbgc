@@ -26,23 +26,23 @@ Examples:
 
     def add_arguments(self, parser):
         parser.add_argument("-m", "--model", dest="model", required=True,
-                            help="Path to JSON model config file.")
+                            help="Path to JSON model config file")
         parser.add_argument('-t', '--target', required=False, default='in_cluster',
-                            help="Target column to predict in sequence prediction.")
+                            help="Target column to predict in sequence prediction")
         parser.add_argument('-o', '--output', required=True,
-                            help="Output trained model file path.")
+                            help="Output trained model file path")
         parser.add_argument('-l', '--log', required=False,
-                            help="Progress log output path (e.g. TensorBoard).")
+                            help="Progress log output path (e.g. TensorBoard)")
         parser.add_argument('-c', '--classes', required=False,
                             help="Class TSV file path - train a sequence classifier "
-                                 "using provided classes (binary columns), indexed by sequence_id column.")
+                                 "using provided classes (binary columns), indexed by sequence_id column")
         parser.add_argument("--config", nargs=2, action='append', default=[],
-                            help="Variables in model JSON file to replace (e.g. --config PFAM2VEC path/to/pfam2vec.csv).")
+                            help="Variables in model JSON file to replace (e.g. --config PFAM2VEC path/to/pfam2vec.csv)")
         parser.add_argument('-v', '--validation', action='append', required=False,
-                            help="Validation sequence file path. Repeat to specify multiple files.")
+                            help="Validation sequence file path. Repeat to specify multiple files")
         parser.add_argument("--verbose", dest="verbose", required=False, default=2, type=int,
-                            help="Verbosity level (0=none, 1=progress bar, 2=once per epoch).", metavar="INT")
-        parser.add_argument(dest='inputs', nargs='+', help="Training sequences (Pfam TSV) file paths.")
+                            help="Verbosity level: 0=none, 1=progress bar, 2=once per epoch (default: %(default)s)", metavar="INT")
+        parser.add_argument(dest='inputs', nargs='+', help="Training sequences (Pfam TSV) file paths")
 
     def run(self, inputs, output, model, target, classes, config, log, validation, verbose):
 
