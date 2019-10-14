@@ -32,6 +32,7 @@ import subprocess
 from distutils.spawn import find_executable
 import shutil
 from datetime import datetime
+import gzip
 
 SCORE_SUFFIX = '_score'
 STRUCTURED_COMMENT_DETECTOR_PREFIX = 'deepbgc_detector_'
@@ -39,6 +40,9 @@ STRUCTURED_COMMENT_CLASSIFIER_PREFIX = 'deepbgc_classifier_'
 DEEPBGC_DOWNLOADS_DIR = 'DEEPBGC_DOWNLOADS_DIR'
 DEEPBGC_DATA_RELEASE_VERSION = 'DEEPBGC_DATA_RELEASE_VERSION'
 PFAM_FEATURE = 'PFAM_domain'
+EXTENSIONS_FASTA = ['.fa', '.fna', '.fasta']
+EXTENSIONS_GENBANK = ['.gbk', '.gb', '.genbank']
+EXTENSIONS_CSV = ['.csv', '.tsv']
 
 def get_protein_features(record):
     return get_features_of_type(record, 'CDS')
@@ -551,7 +555,7 @@ def read_samples(paths, target_column=None):
             domains = pd.concat([create_pfam_dataframe(record, add_scores=False, add_in_cluster=target_in_cluster)
                                  for record in SeqIO.parse(sample_path, fmt)])
         else:
-            raise NotImplementedError('Samples have to be provided in Pfam TSV format, got: {}'.format(sample_path))
+            raise NotImplementedError('Samples have to be provided in Pfam TSV or annotated GenBank format, got: {}'.format(sample_path))
         samples = [sample for sample_id, sample in domains.groupby('sequence_id')]
         logging.info('Loaded %s samples and %s domains from %s', len(samples), len(domains), sample_path)
         all_samples += samples
@@ -590,14 +594,21 @@ def read_samples_with_classes(sample_paths, classes):
 
 
 def guess_format(file_path, accept_csv=False):
-    _, ext = os.path.splitext(file_path)
-    if ext in ['.fa', '.fna', '.fasta']:
+    _, ext = os.path.splitext(file_path.lower())
+    if ext in EXTENSIONS_FASTA:
         return 'fasta'
-    elif ext in ['.gbk', '.gb', '.genbank']:
+    elif ext in EXTENSIONS_GENBANK:
         return 'genbank'
-    elif accept_csv and ext in ['.csv','.tsv']:
+    elif accept_csv and ext in EXTENSIONS_CSV:
         return 'csv'
-    return None
+
+    extensions = EXTENSIONS_GENBANK + EXTENSIONS_FASTA
+    if accept_csv:
+        extensions += EXTENSIONS_CSV
+    raise NotImplementedError("Sequence file type not recognized: '{}', ".format(file_path),
+                              "Please provide a sequence "
+                              "with an appropriate file extension "
+                              "({}), ending with .gz if gzipped.".format(', '.join(extensions)))
 
 
 def is_valid_hmmscan_output(domtbl_path):
@@ -616,3 +627,26 @@ def is_valid_hmmscan_output(domtbl_path):
 def print_elapsed_time(start_time):
     s = (datetime.now() - start_time).total_seconds()
     return '{:.0f}h{:.0f}m{:.0f}s'.format(s//3600, (s//60) % 60, s % 60)
+
+
+class SequenceParser(object):
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.fd = None
+        self.fmt = None
+
+    def __enter__(self):
+        if self.file_path.lower().endswith('.gz'):
+            self.fmt = guess_format(self.file_path[:-3])
+            self.fd = gzip.open(self.file_path, 'rt')
+        else:
+            self.fmt = guess_format(self.file_path)
+            self.fd = open(self.file_path, 'r')
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.fd is not None:
+            self.fd.close()
+
+    def parse(self):
+        return SeqIO.parse(self.fd, self.fmt)

@@ -4,13 +4,18 @@ from test.test_util import get_test_file, assert_sorted_features
 import os
 from deepbgc import util
 import pandas as pd
+import pytest
 
 
-def test_integration_prepare_default(tmpdir):
+@pytest.mark.parametrize("input_file", [
+    "BGC0000015.fa",
+    "BGC0000015.fa.gz",
+])
+def test_integration_prepare_default(tmpdir, input_file):
     tmpdir = str(tmpdir)
     outgbk = os.path.join(tmpdir, 'outfile.gbk')
     outtsv = os.path.join(tmpdir, 'outfile.tsv')
-    run(['prepare', '--output-gbk', outgbk, '--output-tsv', outtsv, get_test_file('BGC0000015.fa')])
+    run(['prepare', '--output-gbk', outgbk, '--output-tsv', outtsv, get_test_file(input_file)])
 
     records = list(SeqIO.parse(outgbk, 'genbank'))
 

@@ -4,12 +4,16 @@ from deepbgc import util
 from deepbgc.main import run
 from test.test_util import get_test_file
 import os
+import pytest
 
-
-def test_integration_pipeline_default(tmpdir):
+@pytest.mark.parametrize("input_file", [
+    "BGC0000015.fa",
+    "BGC0000015.fa.gz",
+])
+def test_integration_pipeline_default(tmpdir, input_file):
     tmpdir = str(tmpdir)
     report_dir = os.path.join(tmpdir, 'report')
-    run(['pipeline', '--output', report_dir, get_test_file('BGC0000015.fa')])
+    run(['pipeline', '--output', report_dir, get_test_file(input_file)])
 
     files = os.listdir(report_dir)
     for file in files:

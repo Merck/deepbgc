@@ -57,20 +57,15 @@ Examples:
 
         num_records = 0
         for input_path in inputs:
-            fmt = util.guess_format(input_path)
-            if not fmt:
-                raise NotImplementedError("Sequence file type not recognized: {}, ".format(input_path),
-                                          "Please provide a GenBank or FASTA sequence "
-                                          "with an appropriate file extension.")
-            records = SeqIO.parse(input_path, fmt)
-            for record in records:
-                if limit_to_record and record.id not in limit_to_record:
-                    logging.debug('Skipping record %s not matching filter %s', record.id, limit_to_record)
-                    continue
-                prepare_step.run(record)
-                for writer in writers:
-                    writer.write(record)
-                num_records += 1
+            with util.SequenceParser(input_path) as parser:
+                for record in parser.parse():
+                    if limit_to_record and record.id not in limit_to_record:
+                        logging.debug('Skipping record %s not matching filter %s', record.id, limit_to_record)
+                        continue
+                    prepare_step.run(record)
+                    for writer in writers:
+                        writer.write(record)
+                    num_records += 1
 
         logging.debug('Removing TMP directory: %s', tmp_dir_path)
         shutil.rmtree(tmp_dir_path)
