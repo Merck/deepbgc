@@ -9,11 +9,13 @@ def test_unit_pipeline_default(tmpdir, mocker):
     tmpdir = str(tmpdir)
     mocker.patch('os.mkdir')
     mocker.patch('deepbgc.command.pipeline.logging.FileHandler')
-    mock_seqio = mocker.patch('deepbgc.command.pipeline.deepbgc.command.pipeline.SeqIO')
+    mock_seqio = mocker.patch('deepbgc.command.pipeline.deepbgc.util.SequenceParser')
 
     record1 = SeqRecord('ABC')
     record2 = SeqRecord('DEF')
-    mock_seqio.parse.return_value = [record1, record2]
+    mock_seqio_instance = mock_seqio.return_value
+    mock_seqio_instance.__enter__.return_value = mock_seqio_instance
+    mock_seqio_instance.parse.return_value = [record1, record2]
 
     mock_annotator = mocker.patch('deepbgc.command.pipeline.DeepBGCAnnotator')
     mock_classifier = mocker.patch('deepbgc.command.pipeline.DeepBGCClassifier')
