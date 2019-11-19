@@ -117,7 +117,7 @@ class HmmscanPfamRecordAnnotator(object):
                     'locus_tag': [query.id],
                     'database': [PFAM_DB_VERSION],
                 }
-                short_pfam_id = pfam_id.rsplit('.', maxsplit=1)[0]
+                short_pfam_id = pfam_id.rsplit('.', 1)[0]
                 description = pfam_descriptions.get(short_pfam_id)
                 if description:
                     qualifiers['description'] = [description]
