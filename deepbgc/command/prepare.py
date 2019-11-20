@@ -33,11 +33,12 @@ Examples:
     def add_arguments(self, parser):
         parser.add_argument(dest='inputs', nargs='+', help="Input sequence file path(s) (FASTA/GenBank)")
         group = parser.add_argument_group('required arguments', '')
-        parser.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times")
+        group.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times")
+        group.add_argument('--prodigal-meta-mode', action='store_true', default=False, help="Run Prodigal in '-p meta' mode to enable detecting genes in short contigs")
         group.add_argument('--output-gbk', required=False, help="Output GenBank file path")
         group.add_argument('--output-tsv', required=False, help="Output TSV file path")
 
-    def run(self, inputs, limit_to_record, output_gbk, output_tsv):
+    def run(self, inputs, limit_to_record, output_gbk, output_tsv, prodigal_meta_mode):
         first_output = output_gbk or output_tsv
         if not first_output:
             raise ValueError('Specify at least one of --output-gbk or --output-tsv')
@@ -47,7 +48,7 @@ Examples:
         if not os.path.exists(tmp_dir_path):
             os.mkdir(tmp_dir_path)
 
-        prepare_step = DeepBGCAnnotator(tmp_dir_path=tmp_dir_path)
+        prepare_step = DeepBGCAnnotator(tmp_dir_path=tmp_dir_path, prodigal_meta_mode=prodigal_meta_mode)
 
         writers = []
         if output_gbk:
