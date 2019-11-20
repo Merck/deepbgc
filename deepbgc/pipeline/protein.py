@@ -12,9 +12,10 @@ from distutils.spawn import find_executable
 
 
 class ProdigalProteinRecordAnnotator(object):
-    def __init__(self, record, tmp_path_prefix):
+    def __init__(self, record, tmp_path_prefix, meta_mode=False):
         self.record = record
         self.tmp_path_prefix = tmp_path_prefix
+        self.meta_mode = meta_mode
 
     def annotate(self):
         logging.info('Finding genes in record: %s', self.record.id)
@@ -29,8 +30,10 @@ class ProdigalProteinRecordAnnotator(object):
 
         logging.debug('Detecting genes using Prodigal...')
 
+
+
         p = subprocess.Popen(
-            ['prodigal', '-i', nucl_path, '-a', protein_path],
+            ['prodigal', '-i', nucl_path, '-a', protein_path] + (['-p','meta'] if self.meta_mode else []),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True
@@ -42,7 +45,7 @@ class ProdigalProteinRecordAnnotator(object):
             logging.warning('== End Prodigal Error. ============')
 
             if 'Sequence must be' in err:
-                logging.warning('No proteins detected in short sequence, moving on.')
+                logging.warning('No proteins detected in short sequence, use --prodigal-meta-mode to run Prodigal in "-p meta" mode.')
             elif os.stat(protein_path).st_size == 0:
                 raise ValueError("Prodigal produced empty output, make sure to use a DNA sequence.")
             else:

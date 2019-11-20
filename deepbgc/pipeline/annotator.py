@@ -8,8 +8,9 @@ import os
 
 class DeepBGCAnnotator(PipelineStep):
 
-    def __init__(self, tmp_dir_path):
+    def __init__(self, tmp_dir_path, prodigal_meta_mode=False):
         self.tmp_dir_path = tmp_dir_path
+        self.prodigal_meta_mode = prodigal_meta_mode
 
     def run(self, record):
         logging.info('Preparing record %s', record.id)
@@ -25,7 +26,7 @@ class DeepBGCAnnotator(PipelineStep):
         if num_proteins:
             logging.info('Sequence already contains %s CDS features, skipping CDS detection', num_proteins)
         else:
-            protein_annotator = ProdigalProteinRecordAnnotator(record=record, tmp_path_prefix=record_tmp_path)
+            protein_annotator = ProdigalProteinRecordAnnotator(record=record, tmp_path_prefix=record_tmp_path, meta_mode=self.prodigal_meta_mode)
             protein_annotator.annotate()
 
         num_pfams = len(util.get_pfam_features(record))

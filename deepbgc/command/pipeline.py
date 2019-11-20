@@ -59,6 +59,7 @@ Examples:
         parser.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times")
         parser.add_argument('--minimal-output', dest='is_minimal_output', action='store_true', default=False,
                             help="Produce minimal output with just the GenBank sequence file")
+        parser.add_argument('--prodigal-meta-mode', action='store_true', default=False, help="Run Prodigal in '-p meta' mode to enable detecting genes in short contigs")
         group = parser.add_argument_group('BGC detection options', '')
         no_models_message = 'run "deepbgc download" to download models'
         detector_names = util.get_available_models('detector')
@@ -88,7 +89,7 @@ Examples:
 
     def run(self, inputs, output, detectors, no_detector, labels, classifiers, no_classifier,
             is_minimal_output, limit_to_record, score, classifier_score, merge_max_protein_gap, merge_max_nucl_gap, min_nucl,
-            min_proteins, min_domains, min_bio_domains):
+            min_proteins, min_domains, min_bio_domains, prodigal_meta_mode):
         if not detectors:
             detectors = ['deepbgc']
         if not classifiers:
@@ -110,7 +111,7 @@ Examples:
         output_file_name = os.path.basename(os.path.normpath(output))
 
         steps = []
-        steps.append(DeepBGCAnnotator(tmp_dir_path=tmp_path))
+        steps.append(DeepBGCAnnotator(tmp_dir_path=tmp_path, prodigal_meta_mode=prodigal_meta_mode))
         if not no_detector:
             if not labels:
                 labels = [None] * len(detectors)
