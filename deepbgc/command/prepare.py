@@ -32,8 +32,8 @@ Examples:
 
     def add_arguments(self, parser):
         parser.add_argument(dest='inputs', nargs='+', help="Input sequence file path(s) (FASTA/GenBank)")
+        parser.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times")
         group = parser.add_argument_group('required arguments', '')
-        group.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times")
         group.add_argument('--prodigal-meta-mode', action='store_true', default=False, help="Run Prodigal in '-p meta' mode to enable detecting genes in short contigs")
         group.add_argument('--output-gbk', required=False, help="Output GenBank file path")
         group.add_argument('--output-tsv', required=False, help="Output TSV file path")
