@@ -35,10 +35,11 @@ Examples:
         parser.add_argument('--limit-to-record', action='append', help="Process only specific record ID. Can be provided multiple times")
         group = parser.add_argument_group('required arguments', '')
         group.add_argument('--prodigal-meta-mode', action='store_true', default=False, help="Run Prodigal in '-p meta' mode to enable detecting genes in short contigs")
+        group.add_argument('--protein', action='store_true', default=False, help="Accept amino-acid protein sequences as input (experimental)")
         group.add_argument('--output-gbk', required=False, help="Output GenBank file path")
         group.add_argument('--output-tsv', required=False, help="Output TSV file path")
 
-    def run(self, inputs, limit_to_record, output_gbk, output_tsv, prodigal_meta_mode):
+    def run(self, inputs, limit_to_record, output_gbk, output_tsv, prodigal_meta_mode, protein):
         first_output = output_gbk or output_tsv
         if not first_output:
             raise ValueError('Specify at least one of --output-gbk or --output-tsv')
@@ -57,8 +58,9 @@ Examples:
             writers.append(PfamTSVWriter(out_path=output_tsv))
 
         num_records = 0
-        for input_path in inputs:
-            with util.SequenceParser(input_path) as parser:
+        for i, input_path in enumerate(inputs):
+            logging.info('Processing input file %s/%s: %s', i+1, len(inputs), input_path)
+            with util.SequenceParser(input_path, protein=protein) as parser:
                 for record in parser.parse():
                     if limit_to_record and record.id not in limit_to_record:
                         logging.debug('Skipping record %s not matching filter %s', record.id, limit_to_record)

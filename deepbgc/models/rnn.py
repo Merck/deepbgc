@@ -156,6 +156,9 @@ class KerasRNN(BaseEstimator, ClassifierMixin):
                       'because external validation set is also present', validation_size)
 
             logging.info('Validating on external validation set of %s samples', len(validation_X_list))
+            if shuffle:
+                logging.warning('New in DeepBGC 0.1.17: Shuffling validation samples!')
+                validation_X_list, validation_y_list = _shuffle_lists(validation_X_list, validation_y_list)
             validation_data = _repeat_all_to_fill_batch_size(validation_X_list, validation_y_list, self.batch_size)
             validation_num_batches = None
         elif validation_size:
@@ -267,6 +270,17 @@ class KerasRNN(BaseEstimator, ClassifierMixin):
 def rotate(l, n):
     m = n % len(l)
     return l[m:] + l[:m]
+
+def _shuffle_lists(*lists):
+    shuffled = []
+    length = len(lists[0])
+    idx = list(range(length))
+    np.random.shuffle(idx)
+    for l in lists:
+        if len(l) != length:
+            raise ValueError('Lists have to be the same length, got: {} and {}'.format(len(l), length))
+        shuffled.append([l[i] for i in idx])
+    return shuffled
 
 def _noop():
     return None

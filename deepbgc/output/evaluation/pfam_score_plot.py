@@ -51,6 +51,8 @@ class PfamScorePlotWriter(OutputWriter):
             for column, thresholds in zip(detector_scores.columns, sequence_thresholds):
                 y = detector_scores[column].values
                 if column == 'in_cluster':
+                    if not np.any(y):
+                        continue
                     color = 'grey'
                     full_height_val = y * (1 + 2 * offset) - offset
                     axes[i].fill_between(x, full_height_val, -offset, color=color, alpha=0.3)
@@ -72,7 +74,7 @@ class PfamScorePlotWriter(OutputWriter):
         fig.savefig(self.out_path, dpi=150, bbox_inches='tight')
 
     def write(self, record):
-        if len(self.sequence_titles) > self.max_sequences:
+        if self.max_sequences is not None and len(self.sequence_titles) > self.max_sequences:
             warnings.warn('Reached maximum number of {} sequences for plotting, some sequences will not be plotted.'.format(self.max_sequences))
             return
         scores = util.create_pfam_dataframe(record, add_in_cluster=True)
@@ -81,15 +83,12 @@ class PfamScorePlotWriter(OutputWriter):
             return
         detector_meta = util.get_record_detector_meta(record)
         detector_names = np.unique([meta['name'] for meta in detector_meta.values()])
-        score_columns = [util.format_bgc_score_column(name) for name in detector_names]
-        thresholds = []
-        if 'in_cluster' in scores.columns:
-            score_columns = ['in_cluster'] + score_columns
-            thresholds.append([])
+        score_columns = ['in_cluster'] + [util.format_bgc_score_column(name) for name in detector_names]
         title = record.id
         if record.description and record.description != record.id:
             title = '{} ({})'.format(record.id, record.description)
         # Each model can have multiple labels, each with a different threshold
+        thresholds = [None]
         for name in detector_names:
             thresholds.append([float(meta['score_threshold']) for meta in detector_meta.values() if meta['name'] == name])
         self.sequence_scores.append(scores[score_columns])
