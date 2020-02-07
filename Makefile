@@ -2,6 +2,7 @@
  
 install:
 	python setup.py install
+	pip install pytest pytest-mock hmmlearn
 
 release:
 ifndef VERSION
