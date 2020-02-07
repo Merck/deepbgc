@@ -8,6 +8,9 @@ from sklearn.metrics import roc_curve, auc
 
 class CurvePlotWriter(PfamScorePlotWriter):
 
+    def __init__(self, out_path):
+        super(CurvePlotWriter, self).__init__(out_path, max_sequences=None)
+
     @classmethod
     def get_description(cls):
         return 'ROC curve based on predicted per-Pfam BGC scores'
@@ -20,8 +23,6 @@ class CurvePlotWriter(PfamScorePlotWriter):
         scores = []
         responses = []
         for i, (detector_scores, detector_names) in enumerate(zip(self.sequence_scores, self.sequence_detector_names)):
-            if 'in_cluster' not in detector_scores.columns:
-                continue
             sample_responses = detector_scores['in_cluster']
             responses.append(sample_responses)
             sample_scores = detector_scores.drop('in_cluster', axis=1)
@@ -40,11 +41,17 @@ class CurvePlotWriter(PfamScorePlotWriter):
         scores, responses = self.get_scores_and_responses()
 
         if not scores:
-            logging.debug('No clusters were annotated, skipping evaluation plot %s', self.out_path)
+            logging.debug('No records were annotated, skipping evaluation plot %s', self.out_path)
             return
 
         merged_scores = pd.concat(scores, sort=False)
         merged_responses = pd.concat(responses, sort=False)
+
+        if not merged_responses.sum():
+            logging.debug('No clusters were annotated, skipping evaluation plot %s', self.out_path)
+            return
+
+        logging.info('%s: Plotting curve using %s samples', type(self).__name__, len(scores))
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
         self.plot_extras(ax)

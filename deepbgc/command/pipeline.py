@@ -60,6 +60,8 @@ Examples:
         parser.add_argument('--minimal-output', dest='is_minimal_output', action='store_true', default=False,
                             help="Produce minimal output with just the GenBank sequence file")
         parser.add_argument('--prodigal-meta-mode', action='store_true', default=False, help="Run Prodigal in '-p meta' mode to enable detecting genes in short contigs")
+        parser.add_argument('--protein', action='store_true', default=False, help="Accept amino-acid protein sequences as input (experimental)")
+
         group = parser.add_argument_group('BGC detection options', '')
         no_models_message = 'run "deepbgc download" to download models'
         detector_names = util.get_available_models('detector')
@@ -89,7 +91,7 @@ Examples:
 
     def run(self, inputs, output, detectors, no_detector, labels, classifiers, no_classifier,
             is_minimal_output, limit_to_record, score, classifier_score, merge_max_protein_gap, merge_max_nucl_gap, min_nucl,
-            min_proteins, min_domains, min_bio_domains, prodigal_meta_mode):
+            min_proteins, min_domains, min_bio_domains, prodigal_meta_mode, protein):
         if not detectors:
             detectors = ['deepbgc']
         if not classifiers:
@@ -160,8 +162,9 @@ Examples:
                 os.mkdir(evaluation_path)
 
         record_idx = 0
-        for input_path in inputs:
-            with util.SequenceParser(input_path) as parser:
+        for i, input_path in enumerate(inputs):
+            logging.info('Processing input file %s/%s: %s', i+1, len(inputs), input_path)
+            with util.SequenceParser(input_path, protein=protein) as parser:
                 for record in parser.parse():
                     if limit_to_record and record.id not in limit_to_record:
                         logging.debug('Skipping record %s not matching filter %s', record.id, limit_to_record)

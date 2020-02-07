@@ -53,10 +53,15 @@ def test_unit_pipeline_default(tmpdir, mocker):
         'mySequence.gbk'
     ])
 
+    # Remove logging handlers to avoid affecting other tests
+    logger = logging.getLogger('')
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
+
     os.mkdir.assert_any_call(report_dir)
     os.mkdir.assert_any_call(report_tmp_dir)
 
-    mock_annotator.assert_called_with(tmp_dir_path=report_tmp_dir)
+    mock_annotator.assert_called_with(tmp_dir_path=report_tmp_dir, prodigal_meta_mode=False)
     mock_classifier.assert_any_call(
         classifier='myclassifier1', 
         score_threshold=0.2
@@ -88,8 +93,3 @@ def test_unit_pipeline_default(tmpdir, mocker):
     for writer in writers:
         assert writer.return_value.write.call_count == 2  # Two records
         writer.return_value.close.assert_called_once_with()
-
-    # Remove logging handlers to avoid affecting other tests
-    logger = logging.getLogger('')
-    for handler in logger.handlers[:]:
-        logger.removeHandler(handler)

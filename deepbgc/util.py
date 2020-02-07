@@ -189,6 +189,9 @@ def create_pfam_dataframe(record, add_scores=True, add_in_cluster=False):
     cluster_locations = [f.location for f in get_cluster_features(record, 'annotated')] if add_in_cluster else []
     df = create_pfam_dataframe_from_features(pfam_features, proteins_by_id, detector_names, cluster_locations)
     df.insert(0, 'sequence_id', record.id)
+    # No clusters were found, set in_cluster to 0
+    if add_in_cluster and 'in_cluster' not in df.columns:
+        df['in_cluster'] = 0
     return df
 
 
@@ -628,12 +631,35 @@ def print_elapsed_time(start_time):
     s = (datetime.now() - start_time).total_seconds()
     return '{:.0f}h{:.0f}m{:.0f}s'.format(s//3600, (s//60) % 60, s % 60)
 
+def create_faux_record_from_proteins(proteins, id):
+    from Bio.SeqRecord import SeqRecord
+    from Bio.Seq import Seq
+    from Bio.SeqFeature import SeqFeature, FeatureLocation
+    record = SeqRecord(seq=Seq(''), id=id)
+    start = 0
+    end = 0
+    max_protein_id_len = 45
+    for protein in proteins:
+        nucl_length = len(protein.seq) * 3
+        end += nucl_length
+        feature = SeqFeature(
+            location=FeatureLocation(start, end, strand=1),
+            type="CDS",
+            qualifiers={
+                'protein_id': [protein.id[max_protein_id_len]],
+                'translation': [protein.seq]
+            }
+        )
+        start += nucl_length
+        record.features.append(feature)
+    return record
 
 class SequenceParser(object):
-    def __init__(self, file_path):
+    def __init__(self, file_path, protein=False):
         self.file_path = file_path
         self.fd = None
         self.fmt = None
+        self.protein = protein
 
     def __enter__(self):
         if self.file_path.lower().endswith('.gz'):
@@ -649,4 +675,10 @@ class SequenceParser(object):
             self.fd.close()
 
     def parse(self):
-        return SeqIO.parse(self.fd, self.fmt)
+        records = SeqIO.parse(self.fd, self.fmt)
+        if self.protein:
+            if self.fmt != 'fasta':
+                raise ValueError('Only FASTA format can be parsed in --protein mode, got: {}'.format(self.file_path))
+            name, _ = os.path.splitext(os.path.basename(self.file_path))
+            return [create_faux_record_from_proteins(records, id=name)]
+        return records

@@ -13,8 +13,6 @@ class DeepBGCAnnotator(PipelineStep):
         self.prodigal_meta_mode = prodigal_meta_mode
 
     def run(self, record):
-        logging.info('Preparing record %s', record.id)
-
         util.fix_record_locus(record)
         util.fix_duplicate_cds(record)
         util.fix_dna_alphabet(record)
