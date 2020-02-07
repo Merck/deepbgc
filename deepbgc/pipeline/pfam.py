@@ -30,7 +30,9 @@ class HmmscanPfamRecordAnnotator(object):
     def _write_proteins(self, proteins, protein_path):
         records = []
         for feature in proteins:
-            translation = feature.extract(self.record.seq).translate()
+            translation = feature.qualifiers.get('translation', [None])[0]
+            if not translation:
+                translation = feature.extract(self.record.seq).translate()
             records.append(SeqRecord(translation, util.get_protein_id(feature), description=''))
         SeqIO.write(records, protein_path, 'fasta')
 
