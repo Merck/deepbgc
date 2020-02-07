@@ -10,11 +10,11 @@ endif
 	git checkout master
 	git pull
 	echo "__version__ = '$(VERSION)'" > deepbgc/__version__.py
-	make dist
-	twine upload dist/deepbgc-$(VERSION)*
 	git add deepbgc/__version__.py
 	git commit -m "Set version to $(VERSION)"
 	git push
+	make dist
+	twine upload dist/deepbgc-$(VERSION)*
 	git checkout develop
 	git pull
 	git rebase origin/master
@@ -33,3 +33,4 @@ local-test:
 	mkdir -p work
 	rm -rf work/BGC0000015
 	deepbgc pipeline test/data/BGC0000015.fa --output work/BGC0000015
+	deepbgc pipeline test/data/labelled.gbk --output work/labelled

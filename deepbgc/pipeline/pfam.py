@@ -10,6 +10,7 @@ import pandas as pd
 
 from deepbgc.data import PFAM_DB_FILE_NAME, PFAM_DB_VERSION, PFAM_CLANS_FILE_NAME
 from Bio import SeqIO, SearchIO
+from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 import numpy as np
@@ -30,8 +31,10 @@ class HmmscanPfamRecordAnnotator(object):
     def _write_proteins(self, proteins, protein_path):
         records = []
         for feature in proteins:
-            translation = feature.qualifiers.get('translation', [None])[0]
-            if not translation:
+            translation_str = feature.qualifiers.get('translation', [None])[0]
+            if translation_str:
+                translation = Seq(translation_str)
+            else:
                 translation = feature.extract(self.record.seq).translate()
             records.append(SeqRecord(translation, util.get_protein_id(feature), description=''))
         SeqIO.write(records, protein_path, 'fasta')

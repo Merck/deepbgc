@@ -39,10 +39,15 @@ class CurvePlotWriter(PfamScorePlotWriter):
 
     def save_plot(self):
         scores, responses = self.get_scores_and_responses()
+
+        if not scores:
+            logging.debug('No records were annotated, skipping evaluation plot %s', self.out_path)
+            return
+
         merged_scores = pd.concat(scores, sort=False)
         merged_responses = pd.concat(responses, sort=False)
 
-        if not scores or not merged_responses.sum():
+        if not merged_responses.sum():
             logging.debug('No clusters were annotated, skipping evaluation plot %s', self.out_path)
             return
 

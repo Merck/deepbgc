@@ -8,7 +8,7 @@ import pytest
 
 @pytest.mark.parametrize("input_file", [
     "BGC0000015.fa",
-    "BGC0000015.fa.gz",
+    "BGC0000015.fa.gz"
 ])
 def test_integration_pipeline_default(tmpdir, input_file):
     tmpdir = str(tmpdir)
@@ -46,4 +46,20 @@ def test_integration_pipeline_default(tmpdir, input_file):
 
     cluster_records = list(SeqIO.parse(os.path.join(report_dir, 'report.bgc.gbk'), 'genbank'))
     assert len(cluster_records) >= 2
+
+
+def test_integration_pipeline_labelled(tmpdir):
+    tmpdir = str(tmpdir)
+    report_dir = os.path.join(tmpdir, 'report')
+    run(['pipeline', '--output', report_dir, get_test_file('labelled.gbk')])
+
+    evaluation_dir = os.path.join(report_dir, 'evaluation')
+    files = os.listdir(evaluation_dir)
+    for file in files:
+        print(file)
+
+    assert 'report.bgc.png' in files
+    assert 'report.score.png' in files
+    assert 'report.roc.png' in files
+    assert 'report.pr.png' in files
 
