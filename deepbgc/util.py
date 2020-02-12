@@ -646,8 +646,8 @@ def create_faux_record_from_proteins(proteins, id):
             location=FeatureLocation(start, end, strand=1),
             type="CDS",
             qualifiers={
-                'protein_id': [protein.id[max_protein_id_len]],
-                'translation': [protein.seq]
+                'protein_id': [protein.id[:max_protein_id_len]],
+                'translation': [str(protein.seq)]
             }
         )
         start += nucl_length

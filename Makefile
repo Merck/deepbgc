@@ -2,7 +2,13 @@
  
 install:
 	python setup.py install
-	pip install pytest pytest-mock hmmlearn
+	pip install pytest pytest-mock hmmlearn twine
+
+conda-env:
+ifndef VERSION
+	$(error "Usage: make conda-env VERSION=0.1.9")
+endif
+	conda create -n deepbgc-$(VERSION) python==3.7 deepbgc==$(VERSION)
 
 release:
 ifndef VERSION

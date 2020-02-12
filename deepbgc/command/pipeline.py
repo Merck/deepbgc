@@ -60,7 +60,7 @@ Examples:
         parser.add_argument('--minimal-output', dest='is_minimal_output', action='store_true', default=False,
                             help="Produce minimal output with just the GenBank sequence file")
         parser.add_argument('--prodigal-meta-mode', action='store_true', default=False, help="Run Prodigal in '-p meta' mode to enable detecting genes in short contigs")
-        parser.add_argument('--protein', action='store_true', default=False, help="Accept amino-acid protein sequences as input (experimental)")
+        parser.add_argument('--protein', action='store_true', default=False, help="Accept amino-acid protein sequences as input (experimental). Will treat each file as a single record with multiple proteins.")
 
         group = parser.add_argument_group('BGC detection options', '')
         no_models_message = 'run "deepbgc download" to download models'
