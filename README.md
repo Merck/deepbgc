@@ -28,7 +28,7 @@ Geoffrey D Hannigan,  David Prihoda et al., Nucleic Acids Research, gkz654, http
 
 If you don't mind installing the HMMER and Prodigal dependencies manually, you can also install DeepBGC using pip:
 
-- Install Python version 2.7+ or 3.4+
+- Install Python version 2.7 or 3.4-3.7 (Note: **Python 3.8 is not supported** due to Tensorflow < 2.0 dependency)
 - Install Prodigal and put the `prodigal` binary it on your PATH: https://github.com/hyattpd/Prodigal/releases
 - Install HMMER and put the `hmmscan` and `hmmpress` binaries on your PATH: http://hmmer.org/download.html
 - Run `pip install deepbgc` to install DeepBGC   
