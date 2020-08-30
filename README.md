@@ -19,7 +19,7 @@ A deep learning genome-mining strategy for biosynthetic gene cluster prediction 
 Geoffrey D Hannigan,  David Prihoda et al., Nucleic Acids Research, gkz654, https://doi.org/10.1093/nar/gkz654
 
 
-## Install using bioconda (recommended)
+## Install using conda (recommended)
 
 - Install Bioconda by following Step 1 and 2 from: https://bioconda.github.io/
 - Run `conda install deepbgc` to install DeepBGC and all of its dependencies    
