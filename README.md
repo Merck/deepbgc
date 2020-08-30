@@ -24,7 +24,7 @@ Geoffrey D Hannigan,  David Prihoda et al., Nucleic Acids Research, gkz654, http
 - Install Bioconda by following Step 1 and 2 from: https://bioconda.github.io/
 - Run `conda install deepbgc` to install DeepBGC and all of its dependencies    
 
-## Install using pip
+## Install using pip (if conda is not available)
 
 If you don't mind installing the HMMER and Prodigal dependencies manually, you can also install DeepBGC using pip:
 
