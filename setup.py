@@ -8,7 +8,7 @@ from io import open
 
 install_requires = [
     'argparse',
-    'biopython>=1.70', # support for structured comments from version 1.70
+    'biopython>=1.70,<=1.76', # support for structured comments from version 1.70, removed Alphabet in version 1.78
     'scikit-learn>=0.18.2', # needed for antiSMASH compatibility
     'pandas>=0.24.1',
     'numpy>=1.16.1,<1.17',
