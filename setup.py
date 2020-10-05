@@ -38,7 +38,7 @@ setup(
     packages=find_packages(exclude=('test','test.*')),
     author_email='david.prihoda1@merck.com',
     license='MIT',
-    python_requires=">=2.7, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+    python_requires=">=3.6,<3.8",
     install_requires=install_requires,
     keywords='biosynthetic gene clusters, bgc detection, deep learning, pfam2vec',
     extras_require={
@@ -46,7 +46,6 @@ setup(
     },
     classifiers=[
         'Development Status :: 4 - Beta',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
     ],
     include_package_data=True,
