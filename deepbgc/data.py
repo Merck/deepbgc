@@ -64,14 +64,14 @@ DOWNLOADS = [
         'target': PFAM_DB_FILE_NAME,
         'gzip': True,
         'after': util.run_hmmpress,
-        'checksum': 'b6fda5fdc90d24fbc1484d3b641d4e32',
+        'checksum': '79a3328e4c95b13949a4489b19959fc5',
         'versioned': False
     },
     {
         'url': 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam{}/Pfam-A.clans.tsv.gz'.format(PFAM_DB_VERSION),
         'target': PFAM_CLANS_FILE_NAME,
         'gzip': True,
-        'checksum': '8951c2a33e7f77c562473097d6ac2b33',
+        'checksum': 'a0a4590ffb2b33b83ef2b28f6ead886b',
         'versioned': False
     }
 ]
