@@ -135,7 +135,7 @@ Examples:
 
         writers = []
         writers.append(GenbankWriter(out_path=os.path.join(output, output_file_name+'.full.gbk')))
-        #writers.append(AntismashJSONWriter(out_path=os.path.join(output, output_file_name + '.antismash.json')))
+        writers.append(AntismashJSONWriter(out_path=os.path.join(output, output_file_name + '.antismash.json')))
         is_evaluation = False
         if not is_minimal_output:
             writers.append(BGCGenbankWriter(out_path=os.path.join(output, output_file_name+'.bgc.gbk')))
