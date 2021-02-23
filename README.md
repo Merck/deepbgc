@@ -13,6 +13,12 @@ Product class and activity of detected BGCs is predicted using a Random Forest c
 
 ![DeepBGC architecture](images/deepbgc.architecture.png?raw=true "DeepBGC architecture")
 
+## 📌 News 📌
+
+- **DeepBGC 0.1.23**: Predicted BGCs can now be uploaded for visualization in **antiSMASH** using a JSON output file
+  - Upload `antismash.json` from the DeepBGC output folder using "Upload extra annotations" on the [antiSMASH](https://antismash.secondarymetabolites.org/) page
+  - Predicted BGC regions and their prediction scores will be displayed alongside antiSMASH BGCs
+ 
 ## Publications
 
 A deep learning genome-mining strategy for biosynthetic gene cluster prediction <br>
