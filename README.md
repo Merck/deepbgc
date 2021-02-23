@@ -16,6 +16,7 @@ Product class and activity of detected BGCs is predicted using a Random Forest c
 ## 📌 News 📌
 
 - **DeepBGC 0.1.23**: Predicted BGCs can now be uploaded for visualization in **antiSMASH** using a JSON output file
+  - Install and run DeepBGC as usual based on instructions below
   - Upload `antismash.json` from the DeepBGC output folder using "Upload extra annotations" on the [antiSMASH](https://antismash.secondarymetabolites.org/) page
   - Predicted BGC regions and their prediction scores will be displayed alongside antiSMASH BGCs
  
