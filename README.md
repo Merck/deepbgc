@@ -89,7 +89,12 @@ Data can be downloaded on the [releases page](https://github.com/Merck/deepbgc/r
 
 You can train your own BGC detection and classification models, see `deepbgc train --help` for documentation and examples.
 
-DeepBGC positives, negatives and other training and validation data can be found in [release 0.1.0](https://github.com/Merck/deepbgc/releases/tag/v0.1.0) and [release 0.1.5](https://github.com/Merck/deepbgc/releases/tag/v0.1.5).
+Training and validation data can be found in [release 0.1.0](https://github.com/Merck/deepbgc/releases/tag/v0.1.0) and [release 0.1.5](https://github.com/Merck/deepbgc/releases/tag/v0.1.5). You will need:
+- Positive (BGC) training data - In most cases, this is your own BGC training set, see "Preparing training data" section below
+- Negative (Non-BGC) training data - Needed for BGC detection. You can use `GeneSwap_Negatives.pfam.tsv` from release https://github.com/Merck/deepbgc/releases/tag/v0.1.0
+- Validation data - Needed for BGC detection. Contigs with annotated BGC and non-BGC regions. A working example can be downloaded from https://github.com/Merck/deepbgc/releases/tag/v0.1.5
+- Trained Pfam2vec vectors - "Vocabulary" converting Pfam IDs to meaningful numeric vectors, you can reuse previously trained `pfam2vec.csv` results from https://github.com/Merck/deepbgc/releases/tag/v0.1.0
+- JSON configuration files - See JSON section below
 
 If you have any questions about using or training DeepBGC, feel free to submit an issue.
 
