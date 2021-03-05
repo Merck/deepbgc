@@ -48,6 +48,10 @@ class HmmscanPfamRecordAnnotator(object):
             start = feature.location.end - 3 * query_end
         else:
             raise ValueError('Invalid strand for feature: {}'.format(feature))
+        # Keep Pfam features within the bounds of their CDS features
+        # Handles case when annotated CDS feature has "translation" sequence that extends its boundaries
+        start = max(start, feature.location.start)
+        end = min(end, feature.location.end)
         return FeatureLocation(start, end, strand=feature.strand)
 
     def _run_hmmscan(self, protein_path, domtbl_path):
