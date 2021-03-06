@@ -8,7 +8,8 @@ from Bio.SeqRecord import SeqRecord
 def test_unit_pipeline_default(tmpdir, mocker):
     tmpdir = str(tmpdir)
     mocker.patch('os.mkdir')
-    mocker.patch('deepbgc.command.pipeline.logging.FileHandler')
+    mock_file_handler = mocker.patch('deepbgc.command.pipeline.logging.FileHandler')
+    mock_file_handler.return_value.level = 0
     mock_seqio = mocker.patch('deepbgc.command.pipeline.deepbgc.util.SequenceParser')
 
     record1 = SeqRecord('ABC')
@@ -25,6 +26,7 @@ def test_unit_pipeline_default(tmpdir, mocker):
         'deepbgc.command.pipeline.BGCRegionPlotWriter',
         'deepbgc.command.pipeline.ClusterTSVWriter',
         'deepbgc.command.pipeline.PfamScorePlotWriter',
+        'deepbgc.command.pipeline.AntismashJSONWriter',
         'deepbgc.command.pipeline.PfamTSVWriter',
         'deepbgc.command.pipeline.GenbankWriter',
         'deepbgc.command.pipeline.BGCGenbankWriter',

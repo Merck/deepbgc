@@ -6,9 +6,8 @@ python:
 # command to install dependencies
 install:
   - pip install .
-  - pip install deepbgc[hmm]
-  - pip install pytest
-  - pip install pytest-mock
+  - pip install deepbgc[hmm] pytest pytest-mock
+  - pip freeze
 # command to run tests
 script:
   - deepbgc --help
