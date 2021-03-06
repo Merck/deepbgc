@@ -8,13 +8,13 @@ from io import open
 
 install_requires = [
     'argparse',
-    'biopython>=1.70,<=1.76', # support for structured comments from version 1.70, removed Alphabet in version 1.78
-    'scikit-learn>=0.18.2,<=0.21.3', # sklearn with random forest compatibility
-    'pandas>=0.24.1',
-    'numpy>=1.16.1,<1.17',
-    'keras>=2.2.4,<2.3.0',
-    'tensorflow>=1.15.4,<2.0.0',
-    'matplotlib>=2.2.3,<3.1',
+    'biopython==1.76', # support for structured comments from version 1.70, removed Alphabet in version 1.78
+    'scikit-learn==0.18.2', # sklearn with random forest compatibility
+    'pandas==0.24.1',
+    'numpy==1.16.1',
+    'keras==2.2.4',
+    'tensorflow==1.15.4',
+    'matplotlib==2.2.3',
     'appdirs>=1.4.3'
 ]
 
