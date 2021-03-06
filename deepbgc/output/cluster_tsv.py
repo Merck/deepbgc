@@ -28,6 +28,10 @@ class ClusterTSVWriter(OutputWriter):
         self.dfs.append(df)
 
     def close(self):
+        if not self.dfs:
+            logging.info('No clusters detected, cluster TSV file will not be created.')
+            return
+
         df = pd.concat(self.dfs, sort=False)
         logging.debug('Writing %s BGCs to: %s', len(df), self.out_path)
         df.to_csv(self.out_path, index=False, sep='\t')
