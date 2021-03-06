@@ -15,7 +15,8 @@ install_requires = [
     'keras==2.2.4',
     'tensorflow==1.15.4',
     'matplotlib==2.2.3',
-    'appdirs>=1.4.3'
+    'appdirs>=1.4.3',
+    'scipy==1.2.0'
 ]
 
 about = {}
