@@ -29,6 +29,7 @@ Geoffrey D Hannigan,  David Prihoda et al., Nucleic Acids Research, gkz654, http
 ## Install using conda (recommended)
 
 - Install Bioconda by following Step 1 and 2 from: https://bioconda.github.io/
+- Add `conda-forge` channel using `conda config --add channels conda-forge`
 - Run `conda install deepbgc` to install DeepBGC and all of its dependencies    
 
 ## Install using pip (if conda is not available)
