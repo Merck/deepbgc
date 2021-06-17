@@ -102,12 +102,16 @@ If you have any questions about using or training DeepBGC, feel free to submit a
 ### Preparing training data
 
 The training examples need to be prepared in Pfam TSV format, which can be prepared from your sequence
-using `deepbgc prepare`. You will need to add an `in_cluster` column that will contain 0 for pfams outside a BGC 
+using `deepbgc prepare`. 
+
+First, you will need to manually add an `in_cluster` column that will contain 0 for pfams outside a BGC 
 and 1 for pfams inside a BGC. We recommend preparing a separate negative TSV and positive TSV file, 
-where the column will be equal to all 0 or 1 respectively. A `sequence_id` column should be added,
+where the column will be equal to all 0 or 1 respectively. 
+
+Finally, you will need to manually add a `sequence_id` column ,
 which will identify a continuous sequence of Pfams from a single sample (BGC or negative sequence).
 The samples are shuffled during training to present the model with a random order of positive and negative samples.
-Pfams with the same `sequence_id` value will be kept together.
+Pfams with the same `sequence_id` value will be kept together. For example, if your training set contains multiple BGCs, the `sequence_id` column should contain the BGC ID.
 
 **! New in version 0.1.17 !** You can now prepare *protein* FASTA sequences into a Pfam TSV file using `deepbgc prepare --protein`.
 
