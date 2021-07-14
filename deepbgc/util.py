@@ -41,7 +41,7 @@ DEEPBGC_DOWNLOADS_DIR = 'DEEPBGC_DOWNLOADS_DIR'
 DEEPBGC_DATA_RELEASE_VERSION = 'DEEPBGC_DATA_RELEASE_VERSION'
 PFAM_FEATURE = 'PFAM_domain'
 EXTENSIONS_FASTA = ['.fa', '.fna', '.fasta']
-EXTENSIONS_GENBANK = ['.gbk', '.gb', '.genbank']
+EXTENSIONS_GENBANK = ['.gbk', '.gb', '.genbank', '.gbff']
 EXTENSIONS_CSV = ['.csv', '.tsv']
 
 def get_protein_features(record):
