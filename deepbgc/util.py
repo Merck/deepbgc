@@ -15,7 +15,12 @@ import gzip
 
 import six
 from Bio import SeqIO
-from Bio.Alphabet import SingleLetterAlphabet, generic_dna
+try:
+    from Bio.Alphabet import SingleLetterAlphabet, generic_dna
+except ImportError:
+    # Removed in Biopython 1.78
+    SingleLetterAlphabet = None
+    generic_dna = None
 from appdirs import user_data_dir
 try:
     from urllib.request import urlretrieve
@@ -509,11 +514,17 @@ def fix_duplicate_cds(record):
 
 
 def fix_dna_alphabet(record):
-    if type(record.seq.alphabet) == SingleLetterAlphabet:
-        logging.warning('Updating record alphabet to generic_dna')
+    """Explicitly label a SeqRecord as DNA (e.g. for GenBank output)."""
+    # Following will only happen on a legacy Biopython:
+    if generic_dna:
+        if type(record.seq.alphabet) == SingleLetterAlphabet:
+            logging.warning('Updating record alphabet to generic_dna')
         record.seq.alphabet = generic_dna
-    record.seq.alphabet = generic_dna
-
+    # Following should be harmless on older Biopython,
+    # but is required on Biopython 1.78 onwards for GenBank:
+    if "DNA" != record.annotations.get("molecule_type", ""):
+        logging.warning('Updating record molecule type to DNA')
+    record.annotations['molecule_type'] = 'DNA'
 
 def read_compatible_csv(path):
     sep = '\t' if path.endswith('.tsv') else ','

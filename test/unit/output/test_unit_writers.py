@@ -13,7 +13,11 @@ import collections
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
-from Bio.Alphabet import generic_dna
+try:
+    from Bio.Alphabet import generic_dna
+except ImportError:
+    # Removed in Biopython 1.78
+    generic_dna = None
 import os
 import pytest
 
@@ -45,7 +49,13 @@ WRITERS = [
 @pytest.fixture
 def processed_record(detector_name='deepbgc', detector_label='deepbgc', score_threshold=0.5):
     comment_key = util.format_detector_meta_key(detector_label)
-    record = SeqRecord(Seq('ACTGCTCGACTGATT', alphabet=generic_dna))
+    if generic_dna:
+        # Legacy mode
+        record = SeqRecord(Seq('ACTGCTCGACTGATT', alphabet=generic_dna))
+    else:
+        # Use this on Biopython 1.78 onwards
+        record = SeqRecord(Seq('ACTGCTCGACTGATT'))
+    record.annotations['molecule_type'] = 'DNA'
     record.annotations['structured_comment'] = collections.OrderedDict()
     record.annotations['structured_comment'][comment_key] = collections.OrderedDict(
         name=detector_name,
