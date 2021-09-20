@@ -7,6 +7,9 @@ env:
 	conda create -n $(ENV_NAME) -c bioconda python=3.7 hmmer prodigal
 	$(CONDA_ACTIVATE); pip install numpy; pip install . pytest pytest-mock hmmlearn
 
+download:
+	$(CONDA_ACTIVATE); deepbgc download
+
 bioconda-install:
 ifndef VERSION
 	$(error "Usage: make conda-env VERSION=0.1.9")

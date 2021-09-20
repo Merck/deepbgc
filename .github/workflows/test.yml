@@ -25,8 +25,8 @@ jobs:
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
-      run: |
-        make env
+      run: make env
+    - name: Download deepbgc files
+      run: make download
     - name: Test with pytest
-      run: |
-        make test
+      run: make test
