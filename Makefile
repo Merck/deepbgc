@@ -1,10 +1,13 @@
+ENV_NAME := deepbgc-dev
+SHELL := /bin/bash
+CONDA_ACTIVATE = eval "$$(conda shell.bash hook)" && conda activate $(ENV_NAME)
 .PHONY: install release dist test
  
-install:
-	python setup.py install
-	pip install pytest pytest-mock hmmlearn twine
+env:
+	conda create -n $(ENV_NAME) -c bioconda hmmer prodigal
+	$(CONDA_ACTIVATE); pip install . pytest pytest-mock hmmlearn
 
-conda-env:
+bioconda-install:
 ifndef VERSION
 	$(error "Usage: make conda-env VERSION=0.1.9")
 endif
@@ -31,10 +34,7 @@ dist:
 	python setup.py sdist bdist_wheel	
 
 test:
-	pytest test
-
-pip-install:
-	pip install --upgrade deepbgc
+	$(CONDA_ACTIVATE); pytest test
 
 local-test:
 	mkdir -p work
