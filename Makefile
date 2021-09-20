@@ -5,7 +5,7 @@ CONDA_ACTIVATE = eval "$$(conda shell.bash hook)" && conda activate $(ENV_NAME)
  
 env:
 	conda create -n $(ENV_NAME) -c bioconda hmmer prodigal
-	$(CONDA_ACTIVATE); pip install . pytest pytest-mock hmmlearn
+	$(CONDA_ACTIVATE); pip install numpy; pip install . pytest pytest-mock hmmlearn
 
 bioconda-install:
 ifndef VERSION
