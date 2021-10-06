@@ -25,12 +25,30 @@ Product class and activity of detected BGCs is predicted using a Random Forest c
 A deep learning genome-mining strategy for biosynthetic gene cluster prediction <br>
 Geoffrey D Hannigan,  David Prihoda et al., Nucleic Acids Research, gkz654, https://doi.org/10.1093/nar/gkz654
 
-
 ## Install using conda (recommended)
 
-- Install Bioconda by following Step 1 and 2 from: https://bioconda.github.io/
-- Add `conda-forge` channel using `conda config --add channels conda-forge`
-- Run `conda install deepbgc` to install DeepBGC and all of its dependencies    
+You can install DeepBGC using [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/download.html) 
+or one of the alternatives ([Miniconda](https://docs.conda.io/en/latest/miniconda.html), 
+[Miniforge](https://github.com/conda-forge/miniforge)).
+
+Set up Bioconda and Conda-Forge channels:
+
+```bash
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
+
+Install DeepBGC using:
+
+```bash
+# Recommended: Create a separate DeepBGC environment
+conda create -n deepbgc python=3.7
+conda activate deepbgc
+
+# Install DeepBGC
+conda install deepbgc
+```
+
 
 ## Install using pip (if conda is not available)
 
