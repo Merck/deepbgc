@@ -43,7 +43,7 @@ setup(
     install_requires=install_requires,
     keywords='biosynthetic gene clusters, bgc detection, deep learning, pfam2vec',
     extras_require={
-        'hmm': ['hmmlearn>=0.2.1']
+        'hmm': ['hmmlearn>=0.2.1,<0.2.7']
     },
     classifiers=[
         'Development Status :: 4 - Beta',
