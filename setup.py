@@ -11,7 +11,7 @@ install_requires = [
     'biopython>=1.78', # Bio.Alphabet was removed then
     'scikit-learn==0.21.3', # sklearn with random forest compatibility
     'pandas==0.24.1',
-    'numpy==1.16.1',
+    'numpy==1.21.0',
     'keras==2.2.4',
     'tensorflow==1.15.4',
     'matplotlib==2.2.3',
