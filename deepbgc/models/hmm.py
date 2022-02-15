@@ -271,7 +271,12 @@ class GeneBorderHMM(HMM):
             'BGC_GENE_END': [None if x < 0 else self.model_.emissionprob_[3][x] for x in sample_vector]
         })
 
-
+    def _check_sum_1(self, name):
+        # Avoid checking hacked emmission probs
+        if name == 'emissionprob_':
+            return
+        return super()._check_sum_1(name)
+        
 class ClusterFinderHMM(DiscreteHMM):
     """
     Wrapper that loads the ClusterFinder trained model from the pickled starting, transition and emission matrices.
