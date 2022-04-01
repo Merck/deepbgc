@@ -200,6 +200,10 @@ class OneHotEncodingTransformer(BaseEstimator, TransformerMixin):
         self.sequence_as_vector = sequence_as_vector
 
     def transform(self, X):
+        if X.empty:
+            X = pd.DataFrame({self.column: []})
+        if self.column not in X.columns:
+            raise ValueError('Unexpected pfam dataframe, column "{}" not found in: {}'.format(self.column, X.columns))
         # Turn each pfam ID into a vector
         values = pd.get_dummies(X[self.column]).reindex(columns=self.unique_values, fill_value=0)
         if self.sequence_as_vector:
