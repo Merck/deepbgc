@@ -41,16 +41,19 @@ conda config --add channels conda-forge
 Install DeepBGC using:
 
 ```bash
-# Recommended: Create a separate DeepBGC environment
-conda create -n deepbgc python=3.7
-conda activate deepbgc
+# Create a separate DeepBGC environment and install dependencies
+conda create -n deepbgc python=3.7 hmmer prodigal
 
-# Install DeepBGC
+# Install DeepBGC into the environment using pip
+conda activate deepbgc
+pip install deepbgc
+
+# Alternatively, install everything using conda (currently unstable due to conda conflicts)
 conda install deepbgc
 ```
 
 
-## Install using pip (if conda is not available)
+## Install dependencies manually (if conda is not available)
 
 If you don't mind installing the HMMER and Prodigal dependencies manually, you can also install DeepBGC using pip:
 
