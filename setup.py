@@ -16,7 +16,8 @@ install_requires = [
     'tensorflow==1.15.4',
     'matplotlib==2.2.3',
     'appdirs>=1.4.3',
-    'scipy==1.2.0'
+    'scipy==1.2.0',
+    'protobuf<4' # Needed to support loading old model pickle files
 ]
 
 about = {}
