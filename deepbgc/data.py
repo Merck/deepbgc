@@ -12,7 +12,7 @@ DATA_RELEASE_VERSION = '0.1.0'
 # !!!
 # !!!
 
-PFAM_DB_VERSION = '31.0'
+PFAM_DB_VERSION = '35.0'
 PFAM_DB_FILE_NAME = 'Pfam-A.{}.hmm'.format(PFAM_DB_VERSION)
 PFAM_CLANS_FILE_NAME = 'Pfam-A.{}.clans.tsv'.format(PFAM_DB_VERSION)
 
@@ -64,14 +64,14 @@ DOWNLOADS = [
         'target': PFAM_DB_FILE_NAME,
         'gzip': True,
         'after': util.run_hmmpress,
-        'checksum': '79a3328e4c95b13949a4489b19959fc5',
+        'checksum': 'eb895a2152c0e977cb6cf1fee27e3003',
         'versioned': False
     },
     {
         'url': 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam{}/Pfam-A.clans.tsv.gz'.format(PFAM_DB_VERSION),
         'target': PFAM_CLANS_FILE_NAME,
         'gzip': True,
-        'checksum': 'a0a4590ffb2b33b83ef2b28f6ead886b',
+        'checksum': 'ba8054e854c2d1809287bfcc3d143947',
         'versioned': False
     }
 ]
