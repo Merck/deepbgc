@@ -48,7 +48,7 @@ def get_protein_features(record):
 
 
 def get_proteins_by_id(protein_features):
-    return {protein_id: feature for feature in protein_features for protein_id in get_protein_ids(feature)}
+    return {get_protein_id(feature): feature for feature in protein_features}
 
 
 def get_features_of_type(record, feature_type):
