@@ -188,6 +188,7 @@ def test_same_protein_id(mock_find_exe, mock_popen, mock_searchio, mock_read_csv
     )
 
     expected_record = deepcopy(record)
+    del expected_record.features[-1].qualifiers['protein_id']
     expected_record.features[-1].qualifiers['unique_protein_id'] = 'AAK73500.1_1'
     expected_record.features += [
             SeqFeature(

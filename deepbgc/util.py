@@ -48,7 +48,7 @@ def get_protein_features(record):
 
 
 def get_proteins_by_id(protein_features):
-    return {get_protein_id(feature): feature for feature in protein_features}
+    return {protein_id: feature for feature in protein_features for protein_id in get_protein_ids(feature)}
 
 
 def get_features_of_type(record, feature_type):
@@ -502,6 +502,7 @@ def fix_duplicate_cds(record):
 
         if protein_id != new_protein_id:
             logging.warning('Setting new unique_protein_id %s for CDS %s', new_protein_id, protein_id)
+            del feature.qualifiers['protein_id']
             feature.qualifiers['unique_protein_id'] = [new_protein_id]
 
         protein_ids.add(new_protein_id)
