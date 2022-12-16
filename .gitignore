@@ -6,3 +6,8 @@ __pycache__
 /work
 *.egg-info
 .pytest_cache
+.ipynb_checkpoints
+.DS_Store
+notebooks/mibig_v3_retraining/data/mibig
+~*
+notebooks/mibig_v3_retraining/data/roc_curves

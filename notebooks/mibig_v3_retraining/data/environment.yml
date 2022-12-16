@@ -1,0 +1,15 @@
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - python = 3.7
+  - pip
+  - prodigal
+  - hmmer >= 3.1
+  - deepbgc = 0.1.30
+  - pip:
+    - pandas
+    - biopython
+    - wget
+    - jupyter
+    - ipykernel 
