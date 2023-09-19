@@ -60,7 +60,7 @@ DOWNLOADS = [
         'versioned': True
     },
     {
-        'url': 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam{}/Pfam-A.hmm.gz'.format(PFAM_DB_VERSION),
+        'url': 'https://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam{}/Pfam-A.hmm.gz'.format(PFAM_DB_VERSION),
         'target': PFAM_DB_FILE_NAME,
         'gzip': True,
         'after': util.run_hmmpress,
@@ -68,7 +68,7 @@ DOWNLOADS = [
         'versioned': False
     },
     {
-        'url': 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam{}/Pfam-A.clans.tsv.gz'.format(PFAM_DB_VERSION),
+        'url': 'https://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam{}/Pfam-A.clans.tsv.gz'.format(PFAM_DB_VERSION),
         'target': PFAM_CLANS_FILE_NAME,
         'gzip': True,
         'checksum': 'a0a4590ffb2b33b83ef2b28f6ead886b',
