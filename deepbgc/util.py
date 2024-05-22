@@ -502,6 +502,7 @@ def fix_duplicate_cds(record):
 
         if protein_id != new_protein_id:
             logging.warning('Setting new unique_protein_id %s for CDS %s', new_protein_id, protein_id)
+            del feature.qualifiers['protein_id']
             feature.qualifiers['unique_protein_id'] = [new_protein_id]
 
         protein_ids.add(new_protein_id)
